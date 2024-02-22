@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package user;
+option go_package="/user/";
+
+import "internal/common/common.proto";
+import "google/protobuf/wrappers.proto";
+
+message InfoReply {
+  common.Result result = 1;
+  string name = 2;
+}
+
+service User {
+  rpc Info(google.protobuf.Int32Value) returns(InfoReply);
+}

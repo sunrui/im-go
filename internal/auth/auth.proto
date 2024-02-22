@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package auth;
+option go_package="/auth/";
+
+import "internal/common/common.proto";
+import "google/protobuf/wrappers.proto";
+
+message AuthRequest {
+  string token = 1;
+}
+
+message AuthReply {
+  common.Result result = 1;
+  optional string userId = 2;
+}
+
+service Auth {
+  rpc Login(AuthRequest) returns(AuthReply);
+  rpc Logout(google.protobuf.Int32Value) returns(common.Result);
+}
