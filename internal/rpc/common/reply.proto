@@ -13,7 +13,7 @@ enum Code {
 }
 
 // 结果
-message Result {
+message Reply {
   Code code = 1; // 代码
   optional string message = 2; // 消息
 }

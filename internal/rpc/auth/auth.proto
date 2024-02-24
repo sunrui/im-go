@@ -8,7 +8,7 @@ syntax = "proto3";
 package auth;
 option go_package = "/auth";
 
-import "internal/rpc/common/result.proto";
+import "internal/rpc/common/reply.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -19,13 +19,13 @@ message LoginRequest {
 
 // 登录回复
 message LoginReply {
-  common.Result result = 1;
+  common.Reply reply = 1;
   optional string userId = 2;
 }
 
 // 获取状态回复
 message GetStateReply {
-  common.Result result = 1;
+  common.Reply reply = 1;
   string userId = 2;
   google.protobuf.Timestamp expiredAt = 3;
 }
@@ -37,5 +37,5 @@ service Auth {
   // 获取状态
   rpc GetState(google.protobuf.Int32Value) returns(GetStateReply);
   // 退出
-  rpc Logout(google.protobuf.Int32Value) returns(common.Result);
+  rpc Logout(google.protobuf.Int32Value) returns(common.Reply);
 }
