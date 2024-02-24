@@ -5,13 +5,15 @@ option go_package="internal/rpc/common";
 
 // 代码
 enum Code {
-  OK = 0;
-  NO_AUTH = 1;
-  PARAMETER_ERROR = 2;
+  OK = 0; // 成功
+  NO_AUTH = 1; // 未登录
+  PARAMETER_ERROR = 2; // 参数错误
+  CHAT_USER_NOT_FOUND = 4; // 用户不存在
+  CHAT_USER_BLOCKED = 3; // 用户已拉黑
 }
 
 // 结果
 message Result {
-  Code code = 1;
-  optional string message = 2;
+  Code code = 1; // 代码
+  optional string message = 2; // 消息
 }

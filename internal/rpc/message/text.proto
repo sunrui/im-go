@@ -12,13 +12,13 @@ option go_package = "/message";
 import "internal/rpc/common/result.proto";
 
 // 文本消息请求
-message MessageTextRequest {
+message TextRequest {
   string userId = 1;
   string text = 2;
 }
 
 // 文本消息回复
-message MessageTextReply {
+message TextReply {
   common.Result result = 1;
   optional string userId = 2;
 }
