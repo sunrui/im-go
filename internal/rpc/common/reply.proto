@@ -7,15 +7,17 @@
 syntax = "proto3";
 
 package common;
-option go_package="internal/rpc/common";
+option go_package = "internal/rpc/common";
 
 // 回复代码
 enum ReplyCode {
   OK = 0; // 成功
   NO_AUTH = 1; // 未登录
   PARAMETER_ERROR = 2; // 参数错误
-  CHAT_USER_NOT_FOUND = 4; // 用户不存在
-  CHAT_USER_BLOCKED = 3; // 用户已拉黑
+  CHAT_USER_NOT_FOUND = 3; // 用户不存在
+  CHAT_USER_BLOCKED = 4; // 用户已拉黑
+  RATE_LIMIT = 5; // 限流
+  INTERNAL_ERROR = 6; // 内部错误
 }
 
 // 回复
