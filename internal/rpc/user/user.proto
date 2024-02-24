@@ -3,7 +3,7 @@ syntax = "proto3";
 package user;
 option go_package="/user";
 
-import "internal/common/common.proto";
+import "internal/rpc/common/result.proto";
 import "google/protobuf/wrappers.proto";
 
 message InfoReply {

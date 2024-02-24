@@ -1,15 +1,17 @@
 syntax = "proto3";
 
 package common;
-option go_package="internal/common";
+option go_package="internal/rpc/common";
 
+// 代码
 enum Code {
   OK = 0;
   NO_AUTH = 1;
   PARAMETER_ERROR = 2;
 }
 
+// 结果
 message Result {
   Code code = 1;
-  string message = 2;
+  optional string message = 2;
 }

@@ -6,9 +6,10 @@ import (
 )
 
 func TestResult(t *testing.T) {
+	message := "Code_Ok"
 	result := Result{
 		Code:    Code_OK,
-		Message: "Code_OK",
+		Message: &message,
 	}
 
 	resultByte, _ := proto.Marshal(&result)

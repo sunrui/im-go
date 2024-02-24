@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.25.3
-// source: internal/auth/auth.proto
+// source: internal/rpc/auth/auth.proto
 
 package auth
 
@@ -12,7 +12,7 @@ import (
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
-	common "internal/common"
+	common "internal/rpc/common"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,9 +24,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	PostLogin(ctx context.Context, in *PostLoginRequest, opts ...grpc.CallOption) (*PostLoginReply, error)
-	GetToken(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetTokenReply, error)
-	PostLogout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Result, error)
+	// 登录
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
+	// 获取状态
+	GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error)
+	// 退出
+	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Result, error)
 }
 
 type authClient struct {
@@ -37,27 +40,27 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) PostLogin(ctx context.Context, in *PostLoginRequest, opts ...grpc.CallOption) (*PostLoginReply, error) {
-	out := new(PostLoginReply)
-	err := c.cc.Invoke(ctx, "/auth.Auth/PostLogin", in, out, opts...)
+func (c *authClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error) {
+	out := new(LoginReply)
+	err := c.cc.Invoke(ctx, "/auth.Auth/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authClient) GetToken(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetTokenReply, error) {
-	out := new(GetTokenReply)
-	err := c.cc.Invoke(ctx, "/auth.Auth/GetToken", in, out, opts...)
+func (c *authClient) GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error) {
+	out := new(GetStateReply)
+	err := c.cc.Invoke(ctx, "/auth.Auth/GetState", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authClient) PostLogout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Result, error) {
+func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Result, error) {
 	out := new(common.Result)
-	err := c.cc.Invoke(ctx, "/auth.Auth/PostLogout", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/auth.Auth/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,9 +71,12 @@ func (c *authClient) PostLogout(ctx context.Context, in *wrapperspb.Int32Value, 
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
-	PostLogin(context.Context, *PostLoginRequest) (*PostLoginReply, error)
-	GetToken(context.Context, *wrapperspb.Int32Value) (*GetTokenReply, error)
-	PostLogout(context.Context, *wrapperspb.Int32Value) (*common.Result, error)
+	// 登录
+	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	// 获取状态
+	GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error)
+	// 退出
+	Logout(context.Context, *wrapperspb.Int32Value) (*common.Result, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -78,14 +84,14 @@ type AuthServer interface {
 type UnimplementedAuthServer struct {
 }
 
-func (UnimplementedAuthServer) PostLogin(context.Context, *PostLoginRequest) (*PostLoginReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostLogin not implemented")
+func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAuthServer) GetToken(context.Context, *wrapperspb.Int32Value) (*GetTokenReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetToken not implemented")
+func (UnimplementedAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
 }
-func (UnimplementedAuthServer) PostLogout(context.Context, *wrapperspb.Int32Value) (*common.Result, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostLogout not implemented")
+func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*common.Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -100,56 +106,56 @@ func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
 	s.RegisterService(&Auth_ServiceDesc, srv)
 }
 
-func _Auth_PostLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostLoginRequest)
+func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).PostLogin(ctx, in)
+		return srv.(AuthServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/auth.Auth/PostLogin",
+		FullMethod: "/auth.Auth/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).PostLogin(ctx, req.(*PostLoginRequest))
+		return srv.(AuthServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_GetToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_GetState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.Int32Value)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).GetToken(ctx, in)
+		return srv.(AuthServer).GetState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/auth.Auth/GetToken",
+		FullMethod: "/auth.Auth/GetState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).GetToken(ctx, req.(*wrapperspb.Int32Value))
+		return srv.(AuthServer).GetState(ctx, req.(*wrapperspb.Int32Value))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_PostLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.Int32Value)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).PostLogout(ctx, in)
+		return srv.(AuthServer).Logout(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/auth.Auth/PostLogout",
+		FullMethod: "/auth.Auth/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).PostLogout(ctx, req.(*wrapperspb.Int32Value))
+		return srv.(AuthServer).Logout(ctx, req.(*wrapperspb.Int32Value))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -162,18 +168,18 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "PostLogin",
-			Handler:    _Auth_PostLogin_Handler,
+			MethodName: "Login",
+			Handler:    _Auth_Login_Handler,
 		},
 		{
-			MethodName: "GetToken",
-			Handler:    _Auth_GetToken_Handler,
+			MethodName: "GetState",
+			Handler:    _Auth_GetState_Handler,
 		},
 		{
-			MethodName: "PostLogout",
-			Handler:    _Auth_PostLogout_Handler,
+			MethodName: "Logout",
+			Handler:    _Auth_Logout_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "internal/auth/auth.proto",
+	Metadata: "internal/rpc/auth/auth.proto",
 }
