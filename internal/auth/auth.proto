@@ -1,21 +1,29 @@
 syntax = "proto3";
 
 package auth;
-option go_package="/auth/";
+option go_package = "/auth";
 
 import "internal/common/common.proto";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
 
-message AuthRequest {
+message PostLoginRequest {
   string token = 1;
 }
 
-message AuthReply {
+message PostLoginReply {
   common.Result result = 1;
   optional string userId = 2;
 }
 
+message GetTokenReply {
+  common.Result result = 1;
+  string userId = 2;
+  google.protobuf.Timestamp expiredAt = 3;
+}
+
 service Auth {
-  rpc Login(AuthRequest) returns(AuthReply);
+  rpc Login(PostLoginRequest) returns(PostLoginReply);
+  rpc GetToken(google.protobuf.Int32Value) returns(GetTokenReply);
   rpc Logout(google.protobuf.Int32Value) returns(common.Result);
 }
