@@ -1,10 +1,16 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-02-24 23:39:45
+ */
+
 syntax = "proto3";
 
 package common;
 option go_package="internal/rpc/common";
 
-// 代码
-enum Code {
+// 回复代码
+enum ReplyCode {
   OK = 0; // 成功
   NO_AUTH = 1; // 未登录
   PARAMETER_ERROR = 2; // 参数错误
@@ -12,8 +18,8 @@ enum Code {
   CHAT_USER_BLOCKED = 3; // 用户已拉黑
 }
 
-// 结果
+// 回复
 message Reply {
-  Code code = 1; // 代码
+  ReplyCode code = 1; // 代码
   optional string message = 2; // 消息
 }

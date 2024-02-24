@@ -29,7 +29,7 @@ type AuthClient interface {
 	// 获取状态
 	GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error)
 	// 退出
-	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Result, error)
+	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Reply, error)
 }
 
 type authClient struct {
@@ -58,8 +58,8 @@ func (c *authClient) GetState(ctx context.Context, in *wrapperspb.Int32Value, op
 	return out, nil
 }
 
-func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Result, error) {
-	out := new(common.Result)
+func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Reply, error) {
+	out := new(common.Reply)
 	err := c.cc.Invoke(ctx, "/auth.Auth/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ type AuthServer interface {
 	// 获取状态
 	GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error)
 	// 退出
-	Logout(context.Context, *wrapperspb.Int32Value) (*common.Result, error)
+	Logout(context.Context, *wrapperspb.Int32Value) (*common.Reply, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -90,7 +90,7 @@ func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginRepl
 func (UnimplementedAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
 }
-func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*common.Result, error) {
+func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*common.Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}

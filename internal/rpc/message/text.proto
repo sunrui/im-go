@@ -20,5 +20,4 @@ message TextRequest {
 // 文本消息回复
 message TextReply {
   common.Reply reply = 1;
-  optional string userId = 2;
 }

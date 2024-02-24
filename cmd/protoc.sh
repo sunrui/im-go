@@ -2,17 +2,17 @@
 
 cd ..
 
-# common/result
+# common/reply
 protoc -I=./ \
        --go_out=./ --go_opt=paths=source_relative \
        --go-grpc_out=./ --go-grpc_opt=paths=source_relative \
-       ./internal/rpc/common/result.proto
+       ./internal/rpc/common/reply.proto
 
-# message/type
+# push/type
 protoc -I=./ \
        --go_out=./ --go_opt=paths=source_relative \
        --go-grpc_out=./ --go-grpc_opt=paths=source_relative \
-       ./internal/rpc/message/type.proto
+       ./internal/rpc/push/type.proto
 
 # message/text
 protoc -I=./ \
