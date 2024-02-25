@@ -9,8 +9,6 @@ syntax = "proto3";
 package message;
 option go_package = "/message";
 
-import "internal/rpc/common/reply.proto";
-
 // 文本消息请求
 message TextRequest {
   string userId = 1;
@@ -19,5 +17,4 @@ message TextRequest {
 
 // 文本消息回复
 message TextReply {
-  common.Reply reply = 1;
 }

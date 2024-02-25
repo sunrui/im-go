@@ -17,7 +17,6 @@ import (
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
-	common "internal/rpc/common"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -39,8 +38,8 @@ type AuthClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
 	// 获取状态
 	GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error)
-	// 退出
-	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Reply, error)
+	// 登出
+	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*LogoutReply, error)
 }
 
 type authClient struct {
@@ -69,8 +68,8 @@ func (c *authClient) GetState(ctx context.Context, in *wrapperspb.Int32Value, op
 	return out, nil
 }
 
-func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*common.Reply, error) {
-	out := new(common.Reply)
+func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*LogoutReply, error) {
+	out := new(LogoutReply)
 	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -86,8 +85,8 @@ type AuthServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	// 获取状态
 	GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error)
-	// 退出
-	Logout(context.Context, *wrapperspb.Int32Value) (*common.Reply, error)
+	// 登出
+	Logout(context.Context, *wrapperspb.Int32Value) (*LogoutReply, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -101,7 +100,7 @@ func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginRepl
 func (UnimplementedAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
 }
-func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*common.Reply, error) {
+func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*LogoutReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}

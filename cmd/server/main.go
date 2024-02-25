@@ -22,7 +22,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	auth.RegisterAuthServer(s, &auth.ImAuthServer{})
+	auth.RegisterAuthServer(s, &auth.ImplAuthServer{})
 	reflection.Register(s)
 
 	defer func() {

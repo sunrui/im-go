@@ -16,19 +16,19 @@ import (
 )
 
 func main() {
-	// 连接gRPC服务器
 	conn, err := grpc.Dial("127.0.0.1:2024", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		println(err.Error())
 	}
-	defer conn.Close()
+
+	defer func() {
+		_ = conn.Close()
+	}()
 
 	// 实例化一个client对象，传入参数conn
 	c := auth.NewAuthClient(conn)
 
-	// 初始化上下文，设置请求超时时间为1秒
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	//延迟关闭请求会话
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// 调用SayHello方法，以请求服务，然后得到响应消息
