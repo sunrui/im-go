@@ -32,7 +32,7 @@ enum Type {
 
   GROUP_MESSAGE = 200; // 群消息
   GROUP_MEMBER_ONLINE = 201; // 群成员在线
-  GROUP_MEMBER_OFFLINE = 202; // 群成员在线
+  GROUP_MEMBER_OFFLINE = 202; // 群成员下线
   GROUP_MEMBER_JOIN = 203; // 群成员加入
   GROUP_MEMBER_LEAVE = 204; // 群成员离开
   GROUP_MEMBER_MUTE = 205; // 群成员禁言

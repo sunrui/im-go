@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 	"internal/rpc/auth"
+	"internal/rpc/token"
 	"log"
 	"net"
 )
@@ -33,9 +34,10 @@ func main() {
 		// The following grpc.ServerOption adds an interceptor for all unary
 		// RPCs. To configure an interceptor for streaming RPCs, see:
 		// https://godoc.org/google.golang.org/grpc#StreamInterceptor
-		grpc.UnaryInterceptor(auth.TokenInterceptor),
+		//grpc.UnaryInterceptor(token.AuthInterceptor),
 		// Enable TLS for all incoming connections.
 		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
+		grpc.UnaryInterceptor(token.RequestIDServerInterceptor()),
 	}
 
 	s := grpc.NewServer(opts...)

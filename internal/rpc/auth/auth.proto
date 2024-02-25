@@ -18,7 +18,8 @@ message LoginRequest {
 
 // 登录回复
 message LoginReply {
-  string userId = 2;
+  string userId = 1;
+  string ip = 2;
 }
 
 // 获取状态回复

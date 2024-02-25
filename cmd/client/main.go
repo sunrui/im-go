@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
 	"internal/rpc/auth"
+	"internal/rpc/token"
 	"log"
 	"time"
 )
@@ -35,6 +36,8 @@ func main() {
 		// credentials.
 		grpc.WithTransportCredentials(creds),
 		//grpc.WithTransportCredentials(insecure.NewCredentials()),
+
+		grpc.WithUnaryInterceptor(token.RequestIDClientInterceptor()),
 	}
 
 	conn, err := grpc.Dial("127.0.0.1:2024", opts...)
@@ -53,10 +56,12 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	for i := 0; i < 10; i++ {
-		if r, err := c.Login(ctx, &auth.LoginRequest{
-			Token: "1234",
-		}); err != nil {
+	for i := 0; i < 3; i++ {
+		r, err := c.Login(ctx, &auth.LoginRequest{
+			Token: fmt.Sprintf("auth.LoginRequest_Token_%d", i),
+		})
+
+		if err != nil {
 			println(err.Error())
 		} else {
 			println(fmt.Sprintf("response from server: %q", r))

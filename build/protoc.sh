@@ -2,12 +2,6 @@
 
 cd ..
 
-# common/reply
-protoc -I=./ \
-       --go_out=./ --go_opt=paths=source_relative \
-       --go-grpc_out=./ --go-grpc_opt=paths=source_relative \
-       ./internal/rpc/common/reply.proto
-
 # push/type
 protoc -I=./ \
        --go_out=./ --go_opt=paths=source_relative \

@@ -3,12 +3,10 @@ syntax = "proto3";
 package user;
 option go_package="/user";
 
-import "internal/rpc/common/reply.proto";
 import "google/protobuf/wrappers.proto";
 
 message InfoReply {
-  common.Reply reply = 1;
-  string name = 2;
+  string name = 1;
 }
 
 service User {
