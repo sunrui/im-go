@@ -11,14 +11,20 @@ import (
 	"fmt"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
 	"internal/rpc/auth"
+	"log"
 	"time"
 )
 
 func main() {
 	perRPC := oauth.TokenSource{TokenSource: oauth2.StaticTokenSource(fetchToken())}
+	creds, err := credentials.NewClientTLSFromFile("../../build/x509/ca_cert.pem", "*.honeysense.com")
+	if err != nil {
+		log.Fatalf("failed to load credentials: %v", err)
+	}
+
 	opts := []grpc.DialOption{
 		// In addition to the following grpc.DialOption, callers may also use
 		// the grpc.CallOption grpc.PerRPCCredentials with the RPC invocation
@@ -27,7 +33,8 @@ func main() {
 		grpc.WithPerRPCCredentials(perRPC),
 		// oauth.TokenSource requires the configuration of transport
 		// credentials.
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithTransportCredentials(creds),
+		//grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
 	conn, err := grpc.Dial("127.0.0.1:2024", opts...)
@@ -46,14 +53,14 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// 调用SayHello方法，以请求服务，然后得到响应消息
-	r, err := c.Login(ctx, &auth.LoginRequest{
-		Token: "1234",
-	})
-	if err != nil {
-		println(err.Error())
-	} else {
-		println(fmt.Sprintf("response from server: %q", r))
+	for i := 0; i < 10; i++ {
+		if r, err := c.Login(ctx, &auth.LoginRequest{
+			Token: "1234",
+		}); err != nil {
+			println(err.Error())
+		} else {
+			println(fmt.Sprintf("response from server: %q", r))
+		}
 	}
 }
 
@@ -61,6 +68,8 @@ func main() {
 // acquisition. For examples of how to acquire an OAuth2 token, see:
 // https://godoc.org/golang.org/x/oauth2
 func fetchToken() *oauth2.Token {
+	println("fetch token.")
+
 	return &oauth2.Token{
 		AccessToken: "some-secret-token",
 	}

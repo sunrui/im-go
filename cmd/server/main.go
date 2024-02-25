@@ -7,10 +7,13 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 	"internal/rpc/auth"
+	"log"
 	"net"
 )
 
@@ -21,13 +24,18 @@ func main() {
 		return
 	}
 
+	cert, err := tls.LoadX509KeyPair("../../build/x509/server_cert.pem", "../../build/x509/server_key.pem")
+	if err != nil {
+		log.Fatalf("failed to load key pair: %s", err)
+	}
+
 	opts := []grpc.ServerOption{
 		// The following grpc.ServerOption adds an interceptor for all unary
 		// RPCs. To configure an interceptor for streaming RPCs, see:
 		// https://godoc.org/google.golang.org/grpc#StreamInterceptor
 		grpc.UnaryInterceptor(auth.TokenInterceptor),
 		// Enable TLS for all incoming connections.
-		//grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
+		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
 	}
 
 	s := grpc.NewServer(opts...)
