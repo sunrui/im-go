@@ -20,11 +20,7 @@ var (
 	errInvalidToken    = status.Errorf(codes.Unauthenticated, "invalid token")
 )
 
-// ensureValidToken ensures a valid token exists within a request's metadata. If
-// the token is missing or invalid, the interceptor blocks execution of the
-// handler and returns an error. Otherwise, the interceptor invokes the unary
-// handler.
-func ensureValidToken(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
+func TokenInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, errMissingMetadata

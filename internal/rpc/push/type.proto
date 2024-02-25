@@ -19,8 +19,9 @@ enum Type {
   FILE = 6; // 文件
   LOCATION = 7; // 定位
   CARD = 8; // 名片
-  VOICE_CALL = 9; // 语音通话
-  VIDEO_CALL = 10; // 视频通话
+  WITHDRAW = 9; // 撤回
+  VOICE_CALL = 10; // 语音通话
+  VIDEO_CALL = 11; // 视频通话
 
   FRIEND_ONLINE = 101; // 好友上线
   FRIEND_OFFLINE = 102; // 好友下线

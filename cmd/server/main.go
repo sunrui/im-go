@@ -20,7 +20,17 @@ func main() {
 		fmt.Printf("failed to listen: %v", err)
 		return
 	}
-	s := grpc.NewServer()
+
+	opts := []grpc.ServerOption{
+		// The following grpc.ServerOption adds an interceptor for all unary
+		// RPCs. To configure an interceptor for streaming RPCs, see:
+		// https://godoc.org/google.golang.org/grpc#StreamInterceptor
+		grpc.UnaryInterceptor(auth.TokenInterceptor),
+		// Enable TLS for all incoming connections.
+		//grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
+	}
+
+	s := grpc.NewServer(opts...)
 
 	auth.RegisterAuthServer(s, &auth.ImplAuthServer{})
 	reflection.Register(s)
