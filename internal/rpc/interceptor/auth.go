@@ -8,11 +8,12 @@ package interceptor
 
 import (
 	"context"
+	"strings"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"strings"
 )
 
 var (
@@ -20,7 +21,7 @@ var (
 	errInvalidToken    = status.Errorf(codes.Unauthenticated, "invalid token")
 )
 
-func AuthInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
+func ServerAuth(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, errMissingMetadata
@@ -30,6 +31,7 @@ func AuthInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, h
 	if !valid(md["authorization"]) {
 		return nil, errInvalidToken
 	}
+
 	// Continue execution of handler after ensuring a valid token.
 	return handler(ctx, req)
 }

@@ -7,7 +7,7 @@
 syntax = "proto3";
 
 package auth;
-option go_package = "/message/room/type";
+option go_package = "/message/room_chat/type";
 
 // 消息类型
 enum Type {

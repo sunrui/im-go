@@ -36,9 +36,9 @@ func main() {
 		// oauth.TokenSource requires the configuration of transport
 		// credentials.
 		grpc.WithTransportCredentials(creds),
+		grpc.WithChainUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
 		// grpc.WithTransportCredentials(insecure.NewCredentials()),
-
-		grpc.WithUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
+		// grpc.WithUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
 	}
 
 	conn, err := grpc.Dial("127.0.0.1:2024", opts...)

@@ -1,7 +1,7 @@
 /*
  * Copyright © 2024 honeysense.com All rights reserved.
  * Author: sunrui
- * Date: 2024-03-07 17:17:43
+ * Date: 2024-03-07 17:37:38
  */
 
 syntax = "proto3";
@@ -11,18 +11,16 @@ option go_package = "/message/chat/type";
 
 // 消息类型
 enum Type {
-  MESSAGE = 0; // 消息
-  NOTIFY = 1; // 通知
-
-  FRIEND_ONLINE = 10; // 好友上线
-  FRIEND_OFFLINE = 11; // 好友下线
-  FRIEND_INPUT_ING = 12; // 好友正在输入
-  FRIEND_INPUT_END = 13; // 好友停止输入
-
-  MESSAGE_DELIVERED = 20; // 好友消息已送达
-  MESSAGE_READ = 21; // 好友消息已读
-  MESSAGE_REJECT = 22; // 好友消息拒收
-
-  ADD_REQUEST = 30; // 好友添加请求
-  ADD_REPLY = 31; // 好友添加回复
+  TEXT = 0; // 文本
+  STICKER = 1; // 表情包
+  QUOTED = 2; // 引用
+  IMAGE = 3; // 图片
+  AUDIO = 4; // 音频
+  VIDEO = 5; // 视频
+  FILE = 6; // 文件
+  LOCATION = 7; // 定位
+  CARD = 8; // 名片
+  WITHDRAW = 9; // 撤回
+  VOICE_CALL = 10; // 语音通话
+  VIDEO_CALL = 11; // 视频通话
 }

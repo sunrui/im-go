@@ -6,16 +6,12 @@
 
 syntax = "proto3";
 
+import "internal/rpc/message/chat/common.proto";
+
 package message;
 option go_package = "/message";
 
-// 文本消息请求
-message TextRequest {
-  int32 seqId = 1;
-  string senderUserId = 2;
-  string text = 3;
-}
-
-// 文本消息回复
-message TextReply {
+// 文本请求
+message TypeText {
+  string text = 1;
 }

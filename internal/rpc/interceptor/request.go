@@ -45,7 +45,7 @@ func RequestIdServerInterceptor() grpc.UnaryServerInterceptor {
 		ctx context.Context,
 		req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
 	) (resp interface{}, err error) {
-		// AuthInterceptor(ctx, req, info, handler)
+		// ServerAuth(ctx, req, info, handler)
 
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {

@@ -1,0 +1,26 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 23:33:37
+ */
+
+syntax = "proto3";
+
+import "internal/rpc/message/chat/common.proto";
+
+package message;
+option go_package = "/message";
+
+message LocalSticker {
+  string alias_name = 20;
+  int32 width = 21;
+  int32 height = 22;
+  int32 size = 23;
+}
+
+message TypeSticker {
+  oneof Uri {
+    string stickerId = 1;
+    LocalSticker localSticker = 2;
+  };
+}

@@ -1,0 +1,49 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 23:31:57
+ */
+
+syntax = "proto3";
+
+import public "google/protobuf/timestamp.proto";
+import "internal/rpc/message/chat/type_text.proto";
+import "internal/rpc/message/chat/type_sticker.proto";
+
+package message;
+option go_package = "/message";
+
+message ChatRequest {
+  int32 seqId = 1;
+
+  oneof toId {
+    string userId = 2;
+    string groupId = 3;
+    string roomId = 4;
+    string bottleId = 5;
+  }
+
+  google.protobuf.Timestamp sendAt = 100;
+
+  oneof Type {
+    TypeText typeText = 10;
+    TypeSticker typeSticker = 11;
+  }
+}
+
+message ChatReply {
+  int32 seqId = 1;
+
+  oneof fromId {
+    string userId = 2;
+    string groupId = 3;
+    string roomId = 4;
+    string bottleId = 5;
+  }
+
+  google.protobuf.Timestamp receiveAt = 100;
+}
+
+service Chat {
+  rpc Text(ChatRequest) returns(ChatReply);
+}

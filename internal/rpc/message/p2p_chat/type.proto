@@ -1,0 +1,28 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 17:17:43
+ */
+
+syntax = "proto3";
+
+package auth;
+option go_package = "/message/p2p_chat/type";
+
+// 消息类型
+enum Type {
+  MESSAGE = 0; // 消息
+  NOTIFY = 1; // 通知
+
+  FRIEND_ONLINE = 10; // 好友上线
+  FRIEND_OFFLINE = 11; // 好友下线
+  FRIEND_INPUT_ING = 12; // 好友正在输入
+  FRIEND_INPUT_END = 13; // 好友停止输入
+
+  MESSAGE_DELIVERED = 20; // 好友消息已送达
+  MESSAGE_READ = 21; // 好友消息已读
+  MESSAGE_REJECT = 22; // 好友消息拒收
+
+  ADD_REQUEST = 30; // 好友添加请求
+  ADD_REPLY = 31; // 好友添加回复
+}
