@@ -1,0 +1,25 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 17:19:14
+ */
+
+syntax = "proto3";
+
+package auth;
+option go_package = "/message/group/type";
+
+
+// 消息类型
+enum Type {
+  MESSAGE = 0; // 群消息
+  NOTIFY = 1; // 通知
+
+  MEMBER_ONLINE = 10; // 群成员在线
+  MEMBER_OFFLINE = 11; // 群成员下线
+  MEMBER_JOIN = 12; // 群成员加入
+  MEMBER_LEAVE = 13; // 群成员离开
+  MEMBER_MUTE = 14; // 群成员禁言
+  MEMBER_UNMUTE = 15; // 群成员解除禁言
+}
+

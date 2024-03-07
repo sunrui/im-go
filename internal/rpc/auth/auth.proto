@@ -10,6 +10,7 @@ option go_package = "/auth";
 
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 // 登录请求
 message LoginRequest {
@@ -40,5 +41,5 @@ service Auth {
   // 获取状态
   rpc GetState(google.protobuf.Int32Value) returns(GetStateReply);
   // 登出
-  rpc Logout(google.protobuf.Int32Value) returns(LogoutReply);
+  rpc Logout(google.protobuf.Int32Value) returns(google.protobuf.Empty);
 }

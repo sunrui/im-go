@@ -1,0 +1,20 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 17:22:43
+ */
+
+syntax = "proto3";
+
+package auth;
+option go_package = "/message/room/type";
+
+// 消息类型
+enum Type {
+  MESSAGE = 0; // 聊天室消息
+  NOTICE = 1; // 通知
+
+  MEMBER_JOIN = 10; // 聊天室成员加入
+  MEMBER_LEAVE = 11; // 聊天室成员离开
+}
+

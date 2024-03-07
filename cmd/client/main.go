@@ -9,14 +9,15 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
 	"internal/rpc/auth"
-	"internal/rpc/token"
-	"log"
-	"time"
+	"internal/rpc/interceptor"
 )
 
 func main() {
@@ -35,9 +36,9 @@ func main() {
 		// oauth.TokenSource requires the configuration of transport
 		// credentials.
 		grpc.WithTransportCredentials(creds),
-		//grpc.WithTransportCredentials(insecure.NewCredentials()),
+		// grpc.WithTransportCredentials(insecure.NewCredentials()),
 
-		grpc.WithUnaryInterceptor(token.RequestIDClientInterceptor()),
+		grpc.WithUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
 	}
 
 	conn, err := grpc.Dial("127.0.0.1:2024", opts...)

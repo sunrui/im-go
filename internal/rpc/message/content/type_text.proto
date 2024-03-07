@@ -1,7 +1,7 @@
 /*
  * Copyright © 2024 honeysense.com All rights reserved.
  * Author: sunrui
- * Date: 2024-02-24 22:47:52
+ * Date: 2024-03-07 17:40:09
  */
 
 syntax = "proto3";
@@ -11,8 +11,9 @@ option go_package = "/message";
 
 // 文本消息请求
 message TextRequest {
-  string userId = 1;
-  string text = 2;
+  int32 seqId = 1;
+  string senderUserId = 2;
+  string text = 3;
 }
 
 // 文本消息回复

@@ -1,0 +1,15 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 17:27:46
+ */
+
+syntax = "proto3";
+
+package auth;
+option go_package = "/message/bottle/type";
+
+// 消息类型
+enum Type {
+  BOTTLE_MESSAGE = 0; // 飘流瓶消息
+}
