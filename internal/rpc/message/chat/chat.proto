@@ -10,8 +10,8 @@ import public "google/protobuf/timestamp.proto";
 import "internal/rpc/message/chat/type_text.proto";
 import "internal/rpc/message/chat/type_sticker.proto";
 
-package message;
-option go_package = "/message";
+package chat;
+option go_package = "/message/chat";
 
 message ChatRequest {
   int32 seqId = 1;
@@ -45,5 +45,5 @@ message ChatReply {
 }
 
 service Chat {
-  rpc Text(ChatRequest) returns(ChatReply);
+  rpc Send(ChatRequest) returns(ChatReply);
 }

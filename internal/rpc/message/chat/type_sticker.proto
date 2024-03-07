@@ -6,10 +6,8 @@
 
 syntax = "proto3";
 
-import "internal/rpc/message/chat/common.proto";
-
-package message;
-option go_package = "/message";
+package chat;
+option go_package = "/message/chat";
 
 message LocalSticker {
   string alias_name = 20;

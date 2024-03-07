@@ -6,7 +6,7 @@
 
 syntax = "proto3";
 
-package auth;
+package chat;
 option go_package = "/message/chat/type";
 
 // 消息类型
