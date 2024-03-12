@@ -2,26 +2,22 @@
 
 cd ..
 
-# push/type
 protoc -I=./ \
        --go_out=./ --go_opt=paths=source_relative \
        --go-grpc_out=./ --go-grpc_opt=paths=source_relative \
-       ./internal/rpc/push/type.proto
+       ./internal/rpc/proto/chat/type.proto
 
-# message/text
 protoc -I=./ \
        --go_out=./ --go_opt=paths=source_relative \
        --go-grpc_out=./ --go-grpc_opt=paths=source_relative \
-       ./internal/rpc/message/text.proto
+       ./internal/rpc/proto/chat/type_text.proto
 
-# auth
 protoc -I=./ \
        --go_out=./ --go_opt=paths=source_relative \
        --go-grpc_out=./ --go-grpc_opt=paths=source_relative \
-       ./internal/rpc/auth/auth.proto
+       ./internal/rpc/proto/chat/type_sticker.proto
 
-# user
 protoc -I=./ \
        --go_out=./ --go_opt=paths=source_relative \
        --go-grpc_out=./ --go-grpc_opt=paths=source_relative \
-       ./internal/rpc/user/user.proto
+       ./internal/rpc/proto/chat/chat.proto

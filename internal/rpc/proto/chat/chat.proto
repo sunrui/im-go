@@ -7,8 +7,8 @@
 syntax = "proto3";
 
 import public "google/protobuf/timestamp.proto";
-import "internal/rpc/message/chat/type_text.proto";
-import "internal/rpc/message/chat/type_sticker.proto";
+import "internal/rpc/proto/chat/type_text.proto";
+import "internal/rpc/proto/chat/type_sticker.proto";
 
 package chat;
 option go_package = "/message/chat";
@@ -41,7 +41,7 @@ message ChatReply {
     string bottleId = 5;
   }
 
-  google.protobuf.Timestamp receiveAt = 100;
+  google.protobuf.Timestamp recvAt = 100;
 }
 
 service Chat {
