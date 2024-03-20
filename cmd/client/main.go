@@ -9,15 +9,17 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"time"
+
+	"internal/rpc/interceptor"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
 	"internal/rpc/auth"
-	"internal/rpc/interceptor"
 )
 
 func main() {
@@ -36,9 +38,7 @@ func main() {
 		// oauth.TokenSource requires the configuration of transport
 		// credentials.
 		grpc.WithTransportCredentials(creds),
-		grpc.WithChainUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
-		// grpc.WithTransportCredentials(insecure.NewCredentials()),
-		// grpc.WithUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
+		grpc.WithChainUnaryInterceptor(interceptor.NewSequenceInterpreter().Client()),
 	}
 
 	conn, err := grpc.Dial("127.0.0.1:2024", opts...)
@@ -54,20 +54,51 @@ func main() {
 	// 实例化一个client对象，传入参数conn
 	c := auth.NewAuthClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 
-	for i := 0; i < 3; i++ {
-		r, err := c.Login(ctx, &auth.LoginRequest{
-			Token: fmt.Sprintf("auth.LoginRequest_Token_%d", i),
-		})
+	go func() {
+		for i := 0; ; i++ {
+			println("client send login...")
+			r, err := c.Login(ctx, &auth.LoginRequest{
+				Token: fmt.Sprintf("auth.LoginRequest_Token_%d", i),
+			})
 
-		if err != nil {
-			println(err.Error())
-		} else {
-			println(fmt.Sprintf("response from server: %q", r))
+			if err != nil {
+				println("line 68, error", err.Error())
+			} else {
+				println(fmt.Sprintf("response from server: %s, %s", r.GetIp(), r.GetUserId()))
+			}
+
+			time.Sleep(5 * time.Second)
 		}
+	}()
+
+	authClient, err := c.Subscribe(ctx, &auth.NotifyRequest{
+		UserId:  "userId",
+		Message: "httpAddr",
+	})
+	if err != nil {
+		println("authClient error = ", err.Error())
+		return
 	}
+
+	for {
+		notifyRes, err := authClient.Recv()
+
+		if err == io.EOF {
+			log.Println("server closed")
+			break
+		}
+		if err != nil {
+			log.Printf("Recv error:%v", err)
+			break
+		}
+
+		println(notifyRes.Message)
+	}
+
+	time.Sleep(time.Hour)
 }
 
 // fetchToken simulates a token lookup and omits the details of proper token

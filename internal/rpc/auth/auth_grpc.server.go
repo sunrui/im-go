@@ -10,13 +10,21 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"net"
+	"strings"
+	"sync"
+	"time"
+
+	"internal/rpc/interceptor"
+
+	"google.golang.org/protobuf/types/known/emptypb"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/wrapperspb"
-	"net"
-	"strings"
 )
 
 // ImplAuthServer 认证服务
@@ -41,14 +49,13 @@ func getClientIP(ctx context.Context) string {
 		return ""
 	}
 
-	println(fmt.Sprintf("%+v", pr))
-
 	if pr.Addr == net.Addr(nil) {
 		println("[getClientIP] peer.Addr is nil")
 		return ""
 	}
 	addSlice := strings.Split(pr.Addr.String(), ":")
-	return addSlice[0]
+
+	return addSlice[0] + ":" + addSlice[1]
 }
 
 // Login 登录
@@ -60,8 +67,8 @@ func (ImplAuthServer) Login(ctx context.Context, req *LoginRequest) (*LoginReply
 		return nil, status.Errorf(codes.InvalidArgument, "method GetState not implemented")
 	}
 
-	requestId := md["request-id"]
-	println("requestId = ", requestId[0])
+	requestId := md[interceptor.SequenceTag]
+	println("Sequence = ", requestId[0])
 
 	userName, err := isAuthenticated(md["authorization"])
 	if err != nil {
@@ -87,8 +94,45 @@ func (ImplAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetSta
 }
 
 // Logout 登出
-func (ImplAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*LogoutReply, error) {
+func (ImplAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+
+var WaitGroup sync.WaitGroup
+
+func (ImplAuthServer) Subscribe(req *NotifyRequest, stream Auth_SubscribeServer) error {
+	log.Printf("Recved %v", req.GetMessage())
+	// 具体返回多少个response根据业务逻辑调整
+
+	for i := 0; i < 5; i++ {
+		WaitGroup.Add(1)
+
+		println("start send message")
+		for i := 0; i < 3; i++ {
+			message := fmt.Sprintf("req.GetMessage() - %d", i)
+
+			// 通过 send 方法不断推送数据
+			err := stream.Send(&NotifyResponse{
+				Message: message,
+			})
+
+			ip := getClientIP(stream.Context())
+			println("send message to ip: ", ip, " - ", message)
+
+			time.Sleep(time.Second)
+
+			if err != nil {
+				log.Fatalf("Send error:%v", err)
+			}
+		}
+		WaitGroup.Done()
+
+		WaitGroup.Wait()
+
+		// break
+	}
+
+	return nil
 }
 
 func (ImplAuthServer) mustEmbedImAuthServer() {}

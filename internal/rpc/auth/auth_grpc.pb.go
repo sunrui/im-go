@@ -16,6 +16,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
@@ -25,9 +26,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Auth_Login_FullMethodName    = "/auth.Auth/Login"
-	Auth_GetState_FullMethodName = "/auth.Auth/GetState"
-	Auth_Logout_FullMethodName   = "/auth.Auth/Logout"
+	Auth_Login_FullMethodName     = "/auth.Auth/Login"
+	Auth_GetState_FullMethodName  = "/auth.Auth/GetState"
+	Auth_Logout_FullMethodName    = "/auth.Auth/Logout"
+	Auth_Subscribe_FullMethodName = "/auth.Auth/Subscribe"
 )
 
 // AuthClient is the client API for Auth service.
@@ -39,7 +41,8 @@ type AuthClient interface {
 	// 获取状态
 	GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error)
 	// 登出
-	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*LogoutReply, error)
+	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Subscribe(ctx context.Context, in *NotifyRequest, opts ...grpc.CallOption) (Auth_SubscribeClient, error)
 }
 
 type authClient struct {
@@ -68,13 +71,45 @@ func (c *authClient) GetState(ctx context.Context, in *wrapperspb.Int32Value, op
 	return out, nil
 }
 
-func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*LogoutReply, error) {
-	out := new(LogoutReply)
+func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *authClient) Subscribe(ctx context.Context, in *NotifyRequest, opts ...grpc.CallOption) (Auth_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Auth_ServiceDesc.Streams[0], Auth_Subscribe_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &authSubscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Auth_SubscribeClient interface {
+	Recv() (*NotifyResponse, error)
+	grpc.ClientStream
+}
+
+type authSubscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *authSubscribeClient) Recv() (*NotifyResponse, error) {
+	m := new(NotifyResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // AuthServer is the server API for Auth service.
@@ -86,7 +121,8 @@ type AuthServer interface {
 	// 获取状态
 	GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error)
 	// 登出
-	Logout(context.Context, *wrapperspb.Int32Value) (*LogoutReply, error)
+	Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error)
+	Subscribe(*NotifyRequest, Auth_SubscribeServer) error
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -100,8 +136,11 @@ func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginRepl
 func (UnimplementedAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
 }
-func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*LogoutReply, error) {
+func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAuthServer) Subscribe(*NotifyRequest, Auth_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -170,6 +209,27 @@ func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(NotifyRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(AuthServer).Subscribe(m, &authSubscribeServer{stream})
+}
+
+type Auth_SubscribeServer interface {
+	Send(*NotifyResponse) error
+	grpc.ServerStream
+}
+
+type authSubscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *authSubscribeServer) Send(m *NotifyResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +250,12 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Auth_Logout_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _Auth_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "internal/rpc/auth/auth.proto",
 }

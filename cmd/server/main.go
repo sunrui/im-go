@@ -36,11 +36,10 @@ func main() {
 		// The following grpc.ServerOption adds an interceptor for all unary
 		// RPCs. To configure an interceptor for streaming RPCs, see:
 		// https://godoc.org/google.golang.org/grpc#StreamInterceptor
-		// grpc.UnaryInterceptor(interceptor.ServerAuth),
 		// Enable TLS for all incoming connections.
 		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
-		// grpc.UnaryInterceptor(interceptor.RequestIdServerInterceptor()),
-		grpc.ChainUnaryInterceptor(interceptor.ServerAuth, interceptor.RequestIdServerInterceptor()),
+		// grpc.UnaryInterceptor(interceptor.ServerAuth),
+		grpc.ChainUnaryInterceptor(interceptor.ServerAuth, interceptor.NewSequenceInterpreter().Server()),
 	}
 
 	s := grpc.NewServer(opts...)
@@ -54,6 +53,14 @@ func main() {
 	}()
 
 	println("listen at 2024")
+
+	// go func() {
+	// for {
+	// time.Sleep(time.Second * 5)
+	// println("waitGroup add 1")
+	// auth.WaitGroup.Add(1)
+	// }
+	// }()
 
 	if err = s.Serve(listen); err != nil {
 		fmt.Printf("failed to serve: %v", err)
