@@ -40,12 +40,14 @@ func main() {
 		// Enable TLS for all incoming connections.
 		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
 		// grpc.UnaryInterceptor(interceptor.RequestIdServerInterceptor()),
-		grpc.ChainUnaryInterceptor(interceptor.ServerAuth, interceptor.RequestIdServerInterceptor()),
+		grpc.ChainUnaryInterceptor(interceptor.ServerAuth, interceptor.NewSequenceInterpreter().Server()),
 	}
 
 	s := grpc.NewServer(opts...)
 
-	auth.RegisterAuthServer(s, &auth.ImplAuthServer{})
+	implAuthServer := auth.ImplAuthServer{}
+
+	auth.RegisterAuthServer(s, &implAuthServer)
 	reflection.Register(s)
 
 	defer func() {

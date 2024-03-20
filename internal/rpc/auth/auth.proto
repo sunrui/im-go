@@ -29,9 +29,13 @@ message GetStateReply {
   google.protobuf.Timestamp expiredAt = 3;
 }
 
-// 登出回复
-message LogoutReply {
+message NotifyRequest {
+  string userId = 1;
+  string message = 2;
+}
 
+message NotifyResponse {
+  string message = 1;
 }
 
 // 认证
@@ -42,4 +46,6 @@ service Auth {
   rpc GetState(google.protobuf.Int32Value) returns(GetStateReply);
   // 登出
   rpc Logout(google.protobuf.Int32Value) returns(google.protobuf.Empty);
+
+  rpc ServerStreamingEcho(NotifyRequest) returns (stream NotifyResponse) {}
 }

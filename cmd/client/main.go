@@ -9,6 +9,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"time"
 
@@ -36,7 +37,7 @@ func main() {
 		// oauth.TokenSource requires the configuration of transport
 		// credentials.
 		grpc.WithTransportCredentials(creds),
-		grpc.WithChainUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
+		grpc.WithChainUnaryInterceptor(interceptor.NewSequenceInterpreter().Client()),
 		// grpc.WithTransportCredentials(insecure.NewCredentials()),
 		// grpc.WithUnaryInterceptor(interceptor.RequestIdClientInterceptor()),
 	}
@@ -66,6 +67,32 @@ func main() {
 			println(err.Error())
 		} else {
 			println(fmt.Sprintf("response from server: %q", r))
+		}
+	}
+
+	for i := 0; i < 2; i++ {
+		authClient, err := c.ServerStreamingEcho(ctx, &auth.NotifyRequest{
+			UserId:  "userId",
+			Message: "httpAddr",
+		})
+		if err != nil {
+			println("authClient error = ", err.Error())
+			return
+		}
+
+		for {
+			notifyRes, err := authClient.Recv()
+
+			if err == io.EOF {
+				log.Println("server closed")
+				break
+			}
+			if err != nil {
+				log.Printf("Recv error:%v", err)
+				break
+			}
+
+			println(notifyRes.Message)
 		}
 	}
 }

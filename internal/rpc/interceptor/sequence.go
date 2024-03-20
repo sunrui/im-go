@@ -1,7 +1,7 @@
 /*
  * Copyright © 2024 honeysense.com All rights reserved.
  * Author: sunrui
- * Date: 2024-02-26 20:53:03
+ * Date: 2024-03-19 22:22:21
  */
 
 package interceptor
@@ -15,10 +15,18 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// 请求标记
-const requestIdTag = "request-id"
+const sequenceTag = "Sequence"
 
-func RequestIdClientInterceptor() grpc.UnaryClientInterceptor {
+// SequenceInterceptor 序号拦截器
+type SequenceInterceptor struct{}
+
+// NewSequenceInterpreter 新建序列号拦截器
+func NewSequenceInterpreter() SequenceInterceptor {
+	return SequenceInterceptor{}
+}
+
+// Client 客户端
+func (sequenceInterceptor SequenceInterceptor) Client() grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, resp interface{},
 		cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption,
 	) (err error) {
@@ -27,40 +35,38 @@ func RequestIdClientInterceptor() grpc.UnaryClientInterceptor {
 			md = metadata.Pairs()
 		}
 
-		value := ctx.Value(requestIdTag)
-		if requestID, ok := value.(string); ok && requestID != "" {
-			println("requestId = ", requestID)
+		value := ctx.Value(sequenceTag)
+		if sequence, ok := value.(string); ok && sequence != "" {
+			println("sequence = ", sequence)
 		} else {
 			second := fmt.Sprintf("%d", time.Now().UnixMilli())
 			println(second)
 			// md[requestIdTag] = []string{second}
-			md.Append(requestIdTag, second)
+			md.Append(sequence, second)
 		}
 		return invoker(metadata.NewOutgoingContext(ctx, md), method, req, resp, cc, opts...)
 	}
 }
 
-func RequestIdServerInterceptor() grpc.UnaryServerInterceptor {
+// Server 服务器
+func (sequenceInterceptor SequenceInterceptor) Server() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
 	) (resp interface{}, err error) {
-		// ServerAuth(ctx, req, info, handler)
-
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {
 			md = metadata.Pairs()
 		}
-		// Set request ID for context.
-		requestIDs := md[requestIdTag]
+
+		requestIDs := md[sequenceTag]
 		if len(requestIDs) >= 1 {
-			ctx = context.WithValue(ctx, requestIdTag, requestIDs[0])
+			ctx = context.WithValue(ctx, sequenceTag, requestIDs[0])
 			return handler(ctx, req)
 		}
 
-		// Generate request ID and set context if not exists.
 		requestID := time.Now().Unix()
-		ctx = context.WithValue(ctx, requestIdTag, requestID)
+		ctx = context.WithValue(ctx, sequenceTag, requestID)
 		return handler(ctx, req)
 	}
 }

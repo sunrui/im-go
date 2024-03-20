@@ -10,13 +10,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"net"
+	"strings"
+	"time"
+
+	"google.golang.org/protobuf/types/known/emptypb"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/wrapperspb"
-	"net"
-	"strings"
 )
 
 // ImplAuthServer 认证服务
@@ -87,8 +92,28 @@ func (ImplAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetSta
 }
 
 // Logout 登出
-func (ImplAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*LogoutReply, error) {
+func (ImplAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+
+func (ImplAuthServer) ServerStreamingEcho(req *NotifyRequest, stream Auth_ServerStreamingEchoServer) error {
+	log.Printf("Recved %v", req.GetMessage())
+	// 具体返回多少个response根据业务逻辑调整
+
+	for i := 0; i < 20; i++ {
+		// 通过 send 方法不断推送数据
+		err := stream.Send(&NotifyResponse{
+			Message: fmt.Sprintf("req.GetMessage() - %d", i),
+		})
+
+		time.Sleep(time.Second)
+
+		if err != nil {
+			log.Fatalf("Send error:%v", err)
+		}
+	}
+
+	return nil
 }
 
 func (ImplAuthServer) mustEmbedImAuthServer() {}
