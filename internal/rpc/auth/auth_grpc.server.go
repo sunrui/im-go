@@ -70,20 +70,22 @@ func (ImplAuthServer) Login(ctx context.Context, req *LoginRequest) (*LoginReply
 	requestId := md[interceptor.SequenceTag]
 	println("Sequence = ", requestId[0])
 
-	userName, err := isAuthenticated(md["authorization"])
+	userId, err := isAuthenticated(md["authorization"])
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
 
-	if ctx.Value("userId") == nil {
-		println("context userId is nil, set is to " + userName)
-		ctx = context.WithValue(ctx, "userId", userName)
-	} else {
-		println("context userId value = %s", ctx.Value("userId"))
-	}
+	// if md["userId"] == nil {
+	// 	println("context userId is nil, set is to " + userId)
+	// 	md["userId"] = make([]string, 1)
+	// 	md["userId"][0] = userId
+	// 	ctx = context.WithValue(ctx, "userId", userId)
+	// } else {
+	// 	println("context userId value = %s", md["userId"][0])
+	// }
 
 	return &LoginReply{
-		UserId: userName,
+		UserId: userId,
 		Ip:     getClientIP(ctx),
 	}, nil
 }
@@ -101,35 +103,30 @@ func (ImplAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.
 var WaitGroup sync.WaitGroup
 
 func (ImplAuthServer) Subscribe(req *NotifyRequest, stream Auth_SubscribeServer) error {
-	log.Printf("Recved %v", req.GetMessage())
-	// 具体返回多少个response根据业务逻辑调整
+	log.Printf("Received %v", req.GetMessage())
 
-	for i := 0; i < 5; i++ {
+	for {
 		WaitGroup.Add(1)
 
-		println("start send message")
-		for i := 0; i < 3; i++ {
-			message := fmt.Sprintf("req.GetMessage() - %d", i)
+		println("start push message")
+		message := fmt.Sprintf("message - %s", time.Now().Format("2006-01-02 15:04:05"))
 
-			// 通过 send 方法不断推送数据
-			err := stream.Send(&NotifyResponse{
-				Message: message,
-			})
+		// 通过 send 方法不断推送数据
+		err := stream.Send(&NotifyResponse{
+			Message: message,
+		})
 
-			ip := getClientIP(stream.Context())
-			println("send message to ip: ", ip, " - ", message)
+		ip := getClientIP(stream.Context())
+		println("send message to ip: ", ip, " - ", message)
 
-			time.Sleep(time.Second)
+		time.Sleep(time.Second)
 
-			if err != nil {
-				log.Fatalf("Send error:%v", err)
-			}
+		if err != nil {
+			log.Fatalf("Send error:%v", err)
 		}
+
 		WaitGroup.Done()
-
 		WaitGroup.Wait()
-
-		// break
 	}
 
 	return nil
