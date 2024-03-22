@@ -42,6 +42,7 @@ type AuthClient interface {
 	GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error)
 	// 登出
 	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 订阅
 	Subscribe(ctx context.Context, in *NotifyRequest, opts ...grpc.CallOption) (Auth_SubscribeClient, error)
 }
 
@@ -122,6 +123,7 @@ type AuthServer interface {
 	GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error)
 	// 登出
 	Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error)
+	// 订阅
 	Subscribe(*NotifyRequest, Auth_SubscribeServer) error
 	mustEmbedUnimplementedAuthServer()
 }
