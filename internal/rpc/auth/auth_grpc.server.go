@@ -13,7 +13,6 @@ import (
 	"log"
 	"net"
 	"strings"
-	"sync"
 	"time"
 
 	"internal/rpc/interceptor"
@@ -100,15 +99,11 @@ func (ImplAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 
-var WaitGroup sync.WaitGroup
-
 func (ImplAuthServer) Subscribe(req *NotifyRequest, stream Auth_SubscribeServer) error {
 	log.Printf("Received %v", req.GetMessage())
 
 	for {
-		WaitGroup.Add(1)
-
-		println("start push message")
+		println("start notify message")
 		message := fmt.Sprintf("message - %s", time.Now().Format("2006-01-02 15:04:05"))
 
 		// 通过 send 方法不断推送数据
@@ -124,9 +119,6 @@ func (ImplAuthServer) Subscribe(req *NotifyRequest, stream Auth_SubscribeServer)
 		if err != nil {
 			log.Fatalf("Send error:%v", err)
 		}
-
-		WaitGroup.Done()
-		WaitGroup.Wait()
 	}
 
 	return nil
