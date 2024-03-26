@@ -1,0 +1,43 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 13:47:26
+ */
+
+syntax = "proto3";
+
+import "internal/rpc/message/group_chat/online.proto";
+import "internal/rpc/message/group_chat/offline.proto";
+import "internal/rpc/message/group_chat/join.proto";
+import "internal/rpc/message/group_chat/leave.proto";
+import "internal/rpc/message/group_chat/mute.proto";
+import "internal/rpc/message/group_chat/unmute.proto";
+
+package message.group_chat;
+option go_package = "/message/group_chat";
+
+// 接收请求
+message ReceiveRequest {
+}
+
+// 接收回复
+message ReceiveReply {
+  string userId = 1; // 用户 id
+
+  oneof Type {
+    Online online = 6; // 上线
+    Offline offline = 7; // 下线
+
+    Join join = 2; // 加入
+    Leave leave = 3; // 离开
+
+    Mute mute = 4; // 禁言
+    Unmute unmute = 5; // 解除禁言
+  }
+}
+
+// 点对点聊天
+service GroupChat {
+  // 接收
+  rpc Receive(ReceiveRequest) returns(stream ReceiveReply);
+}

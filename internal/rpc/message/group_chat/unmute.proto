@@ -1,0 +1,17 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 13:49:34
+ */
+
+syntax = "proto3";
+
+package message.group_chat;
+option go_package = "/message/group_chat";
+
+// 禁言
+message Unmute {
+  string userId = 1; // 用户 id
+  string reason = 2; // 原因
+}
+
