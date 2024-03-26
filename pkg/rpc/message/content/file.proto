@@ -1,0 +1,15 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 10:36:26
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.message.content;
+option go_package = "pkg/rpc/message/content";
+
+// 文件
+message File {
+  string url = 1; // 地址
+}

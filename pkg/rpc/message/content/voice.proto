@@ -1,0 +1,19 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 10:33:51
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.message.content;
+option go_package = "pkg/rpc/message/content";
+
+// 语音
+message Voice {
+  oneof Uri {
+    string alias_name = 1; // 别名
+    string hash = 2; // 哈希
+    string url = 3; // 地址
+  }
+}
