@@ -44,13 +44,13 @@ message Content {
 }
 
 // 发送请求
-message SendRequest {
+message ToRequest {
   Source source = 1; // 来源
   Content content = 2; // 内容
 }
 
 // 发送回复
-message SendReply {
+message ToReply {
   int32 sequenceId = 1; // 序号
 
   // 状态
@@ -76,7 +76,7 @@ message ReceiveReply {
 // 聊天
 service Chat {
   // 发送
-  rpc Send(SendRequest) returns(SendReply);
+  rpc To(ToRequest) returns(ToReply);
   // 接收
   rpc Receive(ReceiveRequest) returns(stream ReceiveReply);
 }

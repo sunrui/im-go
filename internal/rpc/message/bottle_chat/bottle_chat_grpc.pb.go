@@ -24,31 +24,31 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GroupChat_Receive_FullMethodName = "/internal.rpc.message.bottle_chat.GroupChat/Receive"
+	BottleChat_Receive_FullMethodName = "/internal.rpc.message.bottle_chat.BottleChat/Receive"
 )
 
-// GroupChatClient is the client API for GroupChat service.
+// BottleChatClient is the client API for BottleChat service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GroupChatClient interface {
+type BottleChatClient interface {
 	// 接收
-	Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (GroupChat_ReceiveClient, error)
+	Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (BottleChat_ReceiveClient, error)
 }
 
-type groupChatClient struct {
+type bottleChatClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGroupChatClient(cc grpc.ClientConnInterface) GroupChatClient {
-	return &groupChatClient{cc}
+func NewBottleChatClient(cc grpc.ClientConnInterface) BottleChatClient {
+	return &bottleChatClient{cc}
 }
 
-func (c *groupChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (GroupChat_ReceiveClient, error) {
-	stream, err := c.cc.NewStream(ctx, &GroupChat_ServiceDesc.Streams[0], GroupChat_Receive_FullMethodName, opts...)
+func (c *bottleChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (BottleChat_ReceiveClient, error) {
+	stream, err := c.cc.NewStream(ctx, &BottleChat_ServiceDesc.Streams[0], BottleChat_Receive_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &groupChatReceiveClient{stream}
+	x := &bottleChatReceiveClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -58,16 +58,16 @@ func (c *groupChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts 
 	return x, nil
 }
 
-type GroupChat_ReceiveClient interface {
+type BottleChat_ReceiveClient interface {
 	Recv() (*ReceiveReply, error)
 	grpc.ClientStream
 }
 
-type groupChatReceiveClient struct {
+type bottleChatReceiveClient struct {
 	grpc.ClientStream
 }
 
-func (x *groupChatReceiveClient) Recv() (*ReceiveReply, error) {
+func (x *bottleChatReceiveClient) Recv() (*ReceiveReply, error) {
 	m := new(ReceiveReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -75,67 +75,67 @@ func (x *groupChatReceiveClient) Recv() (*ReceiveReply, error) {
 	return m, nil
 }
 
-// GroupChatServer is the server API for GroupChat service.
-// All implementations must embed UnimplementedGroupChatServer
+// BottleChatServer is the server API for BottleChat service.
+// All implementations must embed UnimplementedBottleChatServer
 // for forward compatibility
-type GroupChatServer interface {
+type BottleChatServer interface {
 	// 接收
-	Receive(*ReceiveRequest, GroupChat_ReceiveServer) error
-	mustEmbedUnimplementedGroupChatServer()
+	Receive(*ReceiveRequest, BottleChat_ReceiveServer) error
+	mustEmbedUnimplementedBottleChatServer()
 }
 
-// UnimplementedGroupChatServer must be embedded to have forward compatible implementations.
-type UnimplementedGroupChatServer struct {
+// UnimplementedBottleChatServer must be embedded to have forward compatible implementations.
+type UnimplementedBottleChatServer struct {
 }
 
-func (UnimplementedGroupChatServer) Receive(*ReceiveRequest, GroupChat_ReceiveServer) error {
+func (UnimplementedBottleChatServer) Receive(*ReceiveRequest, BottleChat_ReceiveServer) error {
 	return status.Errorf(codes.Unimplemented, "method Receive not implemented")
 }
-func (UnimplementedGroupChatServer) mustEmbedUnimplementedGroupChatServer() {}
+func (UnimplementedBottleChatServer) mustEmbedUnimplementedBottleChatServer() {}
 
-// UnsafeGroupChatServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GroupChatServer will
+// UnsafeBottleChatServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BottleChatServer will
 // result in compilation errors.
-type UnsafeGroupChatServer interface {
-	mustEmbedUnimplementedGroupChatServer()
+type UnsafeBottleChatServer interface {
+	mustEmbedUnimplementedBottleChatServer()
 }
 
-func RegisterGroupChatServer(s grpc.ServiceRegistrar, srv GroupChatServer) {
-	s.RegisterService(&GroupChat_ServiceDesc, srv)
+func RegisterBottleChatServer(s grpc.ServiceRegistrar, srv BottleChatServer) {
+	s.RegisterService(&BottleChat_ServiceDesc, srv)
 }
 
-func _GroupChat_Receive_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _BottleChat_Receive_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(ReceiveRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(GroupChatServer).Receive(m, &groupChatReceiveServer{stream})
+	return srv.(BottleChatServer).Receive(m, &bottleChatReceiveServer{stream})
 }
 
-type GroupChat_ReceiveServer interface {
+type BottleChat_ReceiveServer interface {
 	Send(*ReceiveReply) error
 	grpc.ServerStream
 }
 
-type groupChatReceiveServer struct {
+type bottleChatReceiveServer struct {
 	grpc.ServerStream
 }
 
-func (x *groupChatReceiveServer) Send(m *ReceiveReply) error {
+func (x *bottleChatReceiveServer) Send(m *ReceiveReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-// GroupChat_ServiceDesc is the grpc.ServiceDesc for GroupChat service.
+// BottleChat_ServiceDesc is the grpc.ServiceDesc for BottleChat service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var GroupChat_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "internal.rpc.message.bottle_chat.GroupChat",
-	HandlerType: (*GroupChatServer)(nil),
+var BottleChat_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "internal.rpc.message.bottle_chat.BottleChat",
+	HandlerType: (*BottleChatServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Receive",
-			Handler:       _GroupChat_Receive_Handler,
+			Handler:       _BottleChat_Receive_Handler,
 			ServerStreams: true,
 		},
 	},
