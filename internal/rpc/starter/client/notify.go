@@ -18,10 +18,11 @@ type Notifier interface {
 	OnAuthFailed(reason string)
 	OnError(err error)
 	OnDisconnect()
+	onClose()
 
-	OnChat(reply *chat.ReceiveReply)
-	OnP2pChat(reply *p2p_chat.ReceiveReply)
-	OnGroupChat(reply *group_chat.ReceiveReply)
-	OnRoomChat(reply *room_chat.ReceiveReply)
-	OnBottleChat(reply *bottle_chat.ReceiveReply)
+	OnChat(reply *chat.SubscribeReply)
+	OnP2PChat(reply *p2p_chat.SubscribeReply)
+	OnGroupChat(reply *group_chat.SubscribeReply)
+	OnRoomChat(reply *room_chat.SubscribeReply)
+	OnBottleChat(reply *bottle_chat.SubscribeReply)
 }

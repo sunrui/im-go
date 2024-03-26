@@ -12,12 +12,12 @@ import (
 	"log"
 	"net"
 
-	"internal/rpc/interceptor"
+	"internal/rpc/starter/interceptor"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
-	"internal/rpc/auth"
+	"internal/rpc/starter/auth"
 )
 
 func main() {

@@ -24,15 +24,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BottleChat_Receive_FullMethodName = "/internal.rpc.message.bottle_chat.BottleChat/Receive"
+	BottleChat_Subscribe_FullMethodName = "/internal.rpc.message.bottle_chat.BottleChat/Subscribe"
 )
 
 // BottleChatClient is the client API for BottleChat service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BottleChatClient interface {
-	// 接收
-	Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (BottleChat_ReceiveClient, error)
+	// 订阅
+	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (BottleChat_SubscribeClient, error)
 }
 
 type bottleChatClient struct {
@@ -43,12 +43,12 @@ func NewBottleChatClient(cc grpc.ClientConnInterface) BottleChatClient {
 	return &bottleChatClient{cc}
 }
 
-func (c *bottleChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (BottleChat_ReceiveClient, error) {
-	stream, err := c.cc.NewStream(ctx, &BottleChat_ServiceDesc.Streams[0], BottleChat_Receive_FullMethodName, opts...)
+func (c *bottleChatClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (BottleChat_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &BottleChat_ServiceDesc.Streams[0], BottleChat_Subscribe_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &bottleChatReceiveClient{stream}
+	x := &bottleChatSubscribeClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -58,17 +58,17 @@ func (c *bottleChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts
 	return x, nil
 }
 
-type BottleChat_ReceiveClient interface {
-	Recv() (*ReceiveReply, error)
+type BottleChat_SubscribeClient interface {
+	Recv() (*SubscribeReply, error)
 	grpc.ClientStream
 }
 
-type bottleChatReceiveClient struct {
+type bottleChatSubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *bottleChatReceiveClient) Recv() (*ReceiveReply, error) {
-	m := new(ReceiveReply)
+func (x *bottleChatSubscribeClient) Recv() (*SubscribeReply, error) {
+	m := new(SubscribeReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -79,8 +79,8 @@ func (x *bottleChatReceiveClient) Recv() (*ReceiveReply, error) {
 // All implementations must embed UnimplementedBottleChatServer
 // for forward compatibility
 type BottleChatServer interface {
-	// 接收
-	Receive(*ReceiveRequest, BottleChat_ReceiveServer) error
+	// 订阅
+	Subscribe(*SubscribeRequest, BottleChat_SubscribeServer) error
 	mustEmbedUnimplementedBottleChatServer()
 }
 
@@ -88,8 +88,8 @@ type BottleChatServer interface {
 type UnimplementedBottleChatServer struct {
 }
 
-func (UnimplementedBottleChatServer) Receive(*ReceiveRequest, BottleChat_ReceiveServer) error {
-	return status.Errorf(codes.Unimplemented, "method Receive not implemented")
+func (UnimplementedBottleChatServer) Subscribe(*SubscribeRequest, BottleChat_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedBottleChatServer) mustEmbedUnimplementedBottleChatServer() {}
 
@@ -104,24 +104,24 @@ func RegisterBottleChatServer(s grpc.ServiceRegistrar, srv BottleChatServer) {
 	s.RegisterService(&BottleChat_ServiceDesc, srv)
 }
 
-func _BottleChat_Receive_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ReceiveRequest)
+func _BottleChat_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(BottleChatServer).Receive(m, &bottleChatReceiveServer{stream})
+	return srv.(BottleChatServer).Subscribe(m, &bottleChatSubscribeServer{stream})
 }
 
-type BottleChat_ReceiveServer interface {
-	Send(*ReceiveReply) error
+type BottleChat_SubscribeServer interface {
+	Send(*SubscribeReply) error
 	grpc.ServerStream
 }
 
-type bottleChatReceiveServer struct {
+type bottleChatSubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *bottleChatReceiveServer) Send(m *ReceiveReply) error {
+func (x *bottleChatSubscribeServer) Send(m *SubscribeReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -134,8 +134,8 @@ var BottleChat_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Receive",
-			Handler:       _BottleChat_Receive_Handler,
+			StreamName:    "Subscribe",
+			Handler:       _BottleChat_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},

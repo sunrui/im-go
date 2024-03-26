@@ -24,8 +24,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Chat_To_FullMethodName      = "/internal.rpc.message.chat.Chat/To"
-	Chat_Receive_FullMethodName = "/internal.rpc.message.chat.Chat/Receive"
+	Chat_To_FullMethodName        = "/internal.rpc.message.chat.Chat/To"
+	Chat_Subscribe_FullMethodName = "/internal.rpc.message.chat.Chat/Subscribe"
 )
 
 // ChatClient is the client API for Chat service.
@@ -34,8 +34,8 @@ const (
 type ChatClient interface {
 	// 发送
 	To(ctx context.Context, in *ToRequest, opts ...grpc.CallOption) (*ToReply, error)
-	// 接收
-	Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (Chat_ReceiveClient, error)
+	// 订阅
+	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (Chat_SubscribeClient, error)
 }
 
 type chatClient struct {
@@ -55,12 +55,12 @@ func (c *chatClient) To(ctx context.Context, in *ToRequest, opts ...grpc.CallOpt
 	return out, nil
 }
 
-func (c *chatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (Chat_ReceiveClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_Receive_FullMethodName, opts...)
+func (c *chatClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (Chat_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Chat_ServiceDesc.Streams[0], Chat_Subscribe_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &chatReceiveClient{stream}
+	x := &chatSubscribeClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -70,17 +70,17 @@ func (c *chatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...gr
 	return x, nil
 }
 
-type Chat_ReceiveClient interface {
-	Recv() (*ReceiveReply, error)
+type Chat_SubscribeClient interface {
+	Recv() (*SubscribeReply, error)
 	grpc.ClientStream
 }
 
-type chatReceiveClient struct {
+type chatSubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *chatReceiveClient) Recv() (*ReceiveReply, error) {
-	m := new(ReceiveReply)
+func (x *chatSubscribeClient) Recv() (*SubscribeReply, error) {
+	m := new(SubscribeReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -93,8 +93,8 @@ func (x *chatReceiveClient) Recv() (*ReceiveReply, error) {
 type ChatServer interface {
 	// 发送
 	To(context.Context, *ToRequest) (*ToReply, error)
-	// 接收
-	Receive(*ReceiveRequest, Chat_ReceiveServer) error
+	// 订阅
+	Subscribe(*SubscribeRequest, Chat_SubscribeServer) error
 	mustEmbedUnimplementedChatServer()
 }
 
@@ -105,8 +105,8 @@ type UnimplementedChatServer struct {
 func (UnimplementedChatServer) To(context.Context, *ToRequest) (*ToReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method To not implemented")
 }
-func (UnimplementedChatServer) Receive(*ReceiveRequest, Chat_ReceiveServer) error {
-	return status.Errorf(codes.Unimplemented, "method Receive not implemented")
+func (UnimplementedChatServer) Subscribe(*SubscribeRequest, Chat_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedChatServer) mustEmbedUnimplementedChatServer() {}
 
@@ -139,24 +139,24 @@ func _Chat_To_Handler(srv interface{}, ctx context.Context, dec func(interface{}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_Receive_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ReceiveRequest)
+func _Chat_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ChatServer).Receive(m, &chatReceiveServer{stream})
+	return srv.(ChatServer).Subscribe(m, &chatSubscribeServer{stream})
 }
 
-type Chat_ReceiveServer interface {
-	Send(*ReceiveReply) error
+type Chat_SubscribeServer interface {
+	Send(*SubscribeReply) error
 	grpc.ServerStream
 }
 
-type chatReceiveServer struct {
+type chatSubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *chatReceiveServer) Send(m *ReceiveReply) error {
+func (x *chatSubscribeServer) Send(m *SubscribeReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -174,8 +174,8 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Receive",
-			Handler:       _Chat_Receive_Handler,
+			StreamName:    "Subscribe",
+			Handler:       _Chat_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},

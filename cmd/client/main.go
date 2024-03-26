@@ -13,13 +13,13 @@ import (
 	"log"
 	"time"
 
-	"internal/rpc/interceptor"
+	"internal/rpc/starter/interceptor"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
-	"internal/rpc/auth"
+	"internal/rpc/starter/auth"
 )
 
 func main() {

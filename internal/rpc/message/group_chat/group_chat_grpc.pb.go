@@ -24,15 +24,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GroupChat_Receive_FullMethodName = "/internal.rpc.message.group_chat.GroupChat/Receive"
+	GroupChat_Subscribe_FullMethodName = "/internal.rpc.message.group_chat.GroupChat/Subscribe"
 )
 
 // GroupChatClient is the client API for GroupChat service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GroupChatClient interface {
-	// 接收
-	Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (GroupChat_ReceiveClient, error)
+	// 订阅
+	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (GroupChat_SubscribeClient, error)
 }
 
 type groupChatClient struct {
@@ -43,12 +43,12 @@ func NewGroupChatClient(cc grpc.ClientConnInterface) GroupChatClient {
 	return &groupChatClient{cc}
 }
 
-func (c *groupChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (GroupChat_ReceiveClient, error) {
-	stream, err := c.cc.NewStream(ctx, &GroupChat_ServiceDesc.Streams[0], GroupChat_Receive_FullMethodName, opts...)
+func (c *groupChatClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (GroupChat_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &GroupChat_ServiceDesc.Streams[0], GroupChat_Subscribe_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &groupChatReceiveClient{stream}
+	x := &groupChatSubscribeClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -58,17 +58,17 @@ func (c *groupChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts 
 	return x, nil
 }
 
-type GroupChat_ReceiveClient interface {
-	Recv() (*ReceiveReply, error)
+type GroupChat_SubscribeClient interface {
+	Recv() (*SubscribeReply, error)
 	grpc.ClientStream
 }
 
-type groupChatReceiveClient struct {
+type groupChatSubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *groupChatReceiveClient) Recv() (*ReceiveReply, error) {
-	m := new(ReceiveReply)
+func (x *groupChatSubscribeClient) Recv() (*SubscribeReply, error) {
+	m := new(SubscribeReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -79,8 +79,8 @@ func (x *groupChatReceiveClient) Recv() (*ReceiveReply, error) {
 // All implementations must embed UnimplementedGroupChatServer
 // for forward compatibility
 type GroupChatServer interface {
-	// 接收
-	Receive(*ReceiveRequest, GroupChat_ReceiveServer) error
+	// 订阅
+	Subscribe(*SubscribeRequest, GroupChat_SubscribeServer) error
 	mustEmbedUnimplementedGroupChatServer()
 }
 
@@ -88,8 +88,8 @@ type GroupChatServer interface {
 type UnimplementedGroupChatServer struct {
 }
 
-func (UnimplementedGroupChatServer) Receive(*ReceiveRequest, GroupChat_ReceiveServer) error {
-	return status.Errorf(codes.Unimplemented, "method Receive not implemented")
+func (UnimplementedGroupChatServer) Subscribe(*SubscribeRequest, GroupChat_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedGroupChatServer) mustEmbedUnimplementedGroupChatServer() {}
 
@@ -104,24 +104,24 @@ func RegisterGroupChatServer(s grpc.ServiceRegistrar, srv GroupChatServer) {
 	s.RegisterService(&GroupChat_ServiceDesc, srv)
 }
 
-func _GroupChat_Receive_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ReceiveRequest)
+func _GroupChat_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(GroupChatServer).Receive(m, &groupChatReceiveServer{stream})
+	return srv.(GroupChatServer).Subscribe(m, &groupChatSubscribeServer{stream})
 }
 
-type GroupChat_ReceiveServer interface {
-	Send(*ReceiveReply) error
+type GroupChat_SubscribeServer interface {
+	Send(*SubscribeReply) error
 	grpc.ServerStream
 }
 
-type groupChatReceiveServer struct {
+type groupChatSubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *groupChatReceiveServer) Send(m *ReceiveReply) error {
+func (x *groupChatSubscribeServer) Send(m *SubscribeReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -134,8 +134,8 @@ var GroupChat_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Receive",
-			Handler:       _GroupChat_Receive_Handler,
+			StreamName:    "Subscribe",
+			Handler:       _GroupChat_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},

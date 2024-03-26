@@ -24,15 +24,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	P2PChat_Receive_FullMethodName = "/internal.rpc.message.p2p_chat.P2pChat/Receive"
+	P2PChat_Subscribe_FullMethodName = "/internal.rpc.message.p2p_chat.P2pChat/Subscribe"
 )
 
 // P2PChatClient is the client API for P2PChat service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type P2PChatClient interface {
-	// 接收
-	Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (P2PChat_ReceiveClient, error)
+	// 订阅
+	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (P2PChat_SubscribeClient, error)
 }
 
 type p2PChatClient struct {
@@ -43,12 +43,12 @@ func NewP2PChatClient(cc grpc.ClientConnInterface) P2PChatClient {
 	return &p2PChatClient{cc}
 }
 
-func (c *p2PChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (P2PChat_ReceiveClient, error) {
-	stream, err := c.cc.NewStream(ctx, &P2PChat_ServiceDesc.Streams[0], P2PChat_Receive_FullMethodName, opts...)
+func (c *p2PChatClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (P2PChat_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &P2PChat_ServiceDesc.Streams[0], P2PChat_Subscribe_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &p2PChatReceiveClient{stream}
+	x := &p2PChatSubscribeClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -58,17 +58,17 @@ func (c *p2PChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ..
 	return x, nil
 }
 
-type P2PChat_ReceiveClient interface {
-	Recv() (*ReceiveReply, error)
+type P2PChat_SubscribeClient interface {
+	Recv() (*SubscribeReply, error)
 	grpc.ClientStream
 }
 
-type p2PChatReceiveClient struct {
+type p2PChatSubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *p2PChatReceiveClient) Recv() (*ReceiveReply, error) {
-	m := new(ReceiveReply)
+func (x *p2PChatSubscribeClient) Recv() (*SubscribeReply, error) {
+	m := new(SubscribeReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -79,8 +79,8 @@ func (x *p2PChatReceiveClient) Recv() (*ReceiveReply, error) {
 // All implementations must embed UnimplementedP2PChatServer
 // for forward compatibility
 type P2PChatServer interface {
-	// 接收
-	Receive(*ReceiveRequest, P2PChat_ReceiveServer) error
+	// 订阅
+	Subscribe(*SubscribeRequest, P2PChat_SubscribeServer) error
 	mustEmbedUnimplementedP2PChatServer()
 }
 
@@ -88,8 +88,8 @@ type P2PChatServer interface {
 type UnimplementedP2PChatServer struct {
 }
 
-func (UnimplementedP2PChatServer) Receive(*ReceiveRequest, P2PChat_ReceiveServer) error {
-	return status.Errorf(codes.Unimplemented, "method Receive not implemented")
+func (UnimplementedP2PChatServer) Subscribe(*SubscribeRequest, P2PChat_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedP2PChatServer) mustEmbedUnimplementedP2PChatServer() {}
 
@@ -104,24 +104,24 @@ func RegisterP2PChatServer(s grpc.ServiceRegistrar, srv P2PChatServer) {
 	s.RegisterService(&P2PChat_ServiceDesc, srv)
 }
 
-func _P2PChat_Receive_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ReceiveRequest)
+func _P2PChat_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(P2PChatServer).Receive(m, &p2PChatReceiveServer{stream})
+	return srv.(P2PChatServer).Subscribe(m, &p2PChatSubscribeServer{stream})
 }
 
-type P2PChat_ReceiveServer interface {
-	Send(*ReceiveReply) error
+type P2PChat_SubscribeServer interface {
+	Send(*SubscribeReply) error
 	grpc.ServerStream
 }
 
-type p2PChatReceiveServer struct {
+type p2PChatSubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *p2PChatReceiveServer) Send(m *ReceiveReply) error {
+func (x *p2PChatSubscribeServer) Send(m *SubscribeReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -134,8 +134,8 @@ var P2PChat_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Receive",
-			Handler:       _P2PChat_Receive_Handler,
+			StreamName:    "Subscribe",
+			Handler:       _P2PChat_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},

@@ -10,8 +10,10 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
-	"time"
+
+	"internal/rpc/starter/auth"
+
+	"internal/rpc/starter/interceptor"
 
 	"internal/rpc/message/bottle_chat"
 
@@ -27,14 +29,13 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
-	"internal/rpc/auth"
-	"internal/rpc/interceptor"
 )
 
 // Client 客户端
 type Client struct {
-	config   Config   // 配置
-	notifier Notifier // 通知
+	config   Config           // 配置
+	notifier Notifier         // 通知
+	conn     *grpc.ClientConn // 连接
 
 	authClient       auth.AuthClient              // 认证客户端
 	chatClient       chat.ChatClient              // 聊天客户端
@@ -54,72 +55,168 @@ func NewClient(config Config, notifier Notifier) *Client {
 
 // Start 启动
 func (client Client) Start() {
-	perRPC := oauth.TokenSource{TokenSource: oauth2.StaticTokenSource(&oauth2.Token{
-		AccessToken: client.config.AccessToken,
-	})}
-	creds, err := credentials.NewClientTLSFromFile(client.config.CertFile, client.config.ServerName)
-	if err != nil {
-		log.Fatalf("failed to load credentials: %v", err)
-	}
-
 	opts := []grpc.DialOption{
-		// In addition to the following grpc.DialOption, callers may also use
-		// the grpc.CallOption grpc.PerRPCCredentials with the RPC invocation
-		// itself.
-		// See: https://godoc.org/google.golang.org/grpc#PerRPCCredentials
-		grpc.WithPerRPCCredentials(perRPC),
-		// oauth.TokenSource requires the configuration of transport
-		// credentials.
-		grpc.WithTransportCredentials(creds),
+		grpc.WithPerRPCCredentials(oauth.TokenSource{
+			TokenSource: oauth2.StaticTokenSource(
+				&oauth2.Token{
+					AccessToken: client.config.AccessToken,
+				}),
+		}),
+		grpc.WithTransportCredentials(func() credentials.TransportCredentials {
+			if transportCredentials, err := credentials.NewClientTLSFromFile(
+				client.config.CertFile, client.config.ServerName); err != nil {
+				client.notifier.OnError(err)
+				return nil
+			} else {
+				return transportCredentials
+			}
+		}()),
 		grpc.WithChainUnaryInterceptor(interceptor.NewSequenceInterpreter().Client()),
 	}
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", client.config.Ip, client.config.Port), opts...)
-	if err != nil {
-		println(err.Error())
+	if conn, err := grpc.Dial(fmt.Sprintf("%s:%d", client.config.Ip, client.config.Port), opts...); err != nil {
+		client.notifier.OnError(err)
 		return
+	} else {
+		client.conn = conn
+		ctx := context.Background()
+
+		go func() {
+			client.authClient = auth.NewAuthClient(client.conn)
+			if authSubscribeClient, err := client.authClient.Subscribe(ctx, &auth.SubscribeRequest{}); err != nil {
+				client.notifier.OnError(err)
+				return
+			} else {
+				for {
+					if reply, err := authSubscribeClient.Recv(); err != nil {
+						client.notifier.OnError(err)
+					} else {
+						if err == io.EOF {
+							client.notifier.onClose()
+							break
+						}
+
+						println(reply.ProtoMessage, reply.Message, reply.GetMessage())
+					}
+				}
+			}
+		}()
+
+		go func() {
+			client.chatClient = chat.NewChatClient(conn)
+			if chatSubscribeClient, err := client.chatClient.Subscribe(ctx, &chat.SubscribeRequest{}); err != nil {
+				client.notifier.OnError(err)
+				return
+			} else {
+				for {
+					if reply, err := chatSubscribeClient.Recv(); err != nil {
+						client.notifier.OnError(err)
+					} else {
+						if err == io.EOF {
+							client.notifier.onClose()
+							break
+						}
+
+						client.notifier.OnChat(reply)
+					}
+				}
+			}
+		}()
+
+		go func() {
+			client.p2pChatClient = p2p_chat.NewP2PChatClient(conn)
+			if p2pChatSubscribeClient, err := client.p2pChatClient.Subscribe(ctx, &p2p_chat.SubscribeRequest{}); err != nil {
+				client.notifier.OnError(err)
+				return
+			} else {
+				for {
+					if reply, err := p2pChatSubscribeClient.Recv(); err != nil {
+						client.notifier.OnError(err)
+					} else {
+						if err == io.EOF {
+							client.notifier.onClose()
+							break
+						}
+
+						client.notifier.OnP2PChat(reply)
+					}
+				}
+			}
+		}()
+
+		go func() {
+			client.groupChatClient = group_chat.NewGroupChatClient(conn)
+			if groupChatSubscribeClient, err := client.groupChatClient.Subscribe(ctx, &group_chat.SubscribeRequest{}); err != nil {
+				client.notifier.OnError(err)
+				return
+			} else {
+				for {
+					if reply, err := groupChatSubscribeClient.Recv(); err != nil {
+						client.notifier.OnError(err)
+					} else {
+						if err == io.EOF {
+							client.notifier.onClose()
+							break
+						}
+
+						client.notifier.OnGroupChat(reply)
+					}
+				}
+			}
+		}()
+
+		go func() {
+			client.roomChatClient = room_chat.NewRoomChatClient(conn)
+			if roomChatSubscribeClient, err := client.roomChatClient.Subscribe(ctx, &room_chat.SubscribeRequest{}); err != nil {
+				client.notifier.OnError(err)
+				return
+			} else {
+				for {
+					if reply, err := roomChatSubscribeClient.Recv(); err != nil {
+						client.notifier.OnError(err)
+					} else {
+						if err == io.EOF {
+							client.notifier.onClose()
+							break
+						}
+
+						client.notifier.OnRoomChat(reply)
+					}
+				}
+			}
+		}()
+
+		go func() {
+			client.bottleChatClient = bottle_chat.NewBottleChatClient(conn)
+			if bottleChatSubscribeClient, err := client.bottleChatClient.Subscribe(ctx, &bottle_chat.SubscribeRequest{}); err != nil {
+				client.notifier.OnError(err)
+				return
+			} else {
+				for {
+					if reply, err := bottleChatSubscribeClient.Recv(); err != nil {
+						client.notifier.OnError(err)
+					} else {
+						if err == io.EOF {
+							client.notifier.onClose()
+							break
+						}
+
+						client.notifier.OnBottleChat(reply)
+					}
+				}
+			}
+		}()
 	}
-
-	defer func() {
-		_ = conn.Close()
-	}()
-
-	// 实例化一个client对象，传入参数conn
-	client.authClient = auth.NewAuthClient(conn)
-	client.chatClient = chat.NewChatClient(conn)
-	client.p2pChatClient = p2p_chat.NewP2PChatClient(conn)
-	client.groupChatClient = group_chat.NewGroupChatClient(conn)
-	client.roomChatClient = room_chat.NewRoomChatClient(conn)
-	client.bottleChatClient = bottle_chat.NewBottleChatClient(conn)
-
-	authClient, err := client.authClient.Subscribe(context.Background(), &auth.NotifyRequest{
-		UserId:  "userId",
-		Message: "httpAddr",
-	})
-	if err != nil {
-		println("authClient error = ", err.Error())
-		return
-	}
-
-	for {
-		notifyRes, err := authClient.Recv()
-
-		if err == io.EOF {
-			log.Println("server closed")
-			break
-		}
-		if err != nil {
-			log.Printf("Recv error:%v", err)
-			break
-		}
-
-		println(notifyRes.Message)
-	}
-
-	time.Sleep(time.Hour)
 }
 
 // ChatTo 聊天
 func (client Client) ChatTo(chatToRequest *chat.ToRequest) (*chat.ToReply, error) {
 	return client.chatClient.To(context.Background(), chatToRequest)
+}
+
+// Close 关闭
+func (client Client) Close() {
+	if err := client.conn.Close(); err != nil {
+		client.notifier.OnError(err)
+	}
 }

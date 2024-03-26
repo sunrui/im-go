@@ -15,15 +15,12 @@ import (
 	"strings"
 	"time"
 
-	"internal/rpc/interceptor"
-
-	"google.golang.org/protobuf/types/known/emptypb"
+	"internal/rpc/starter/interceptor"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 // ImplAuthServer 认证服务
@@ -89,17 +86,7 @@ func (ImplAuthServer) Login(ctx context.Context, req *LoginRequest) (*LoginReply
 	}, nil
 }
 
-// GetState 获取状态
-func (ImplAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
-}
-
-// Logout 登出
-func (ImplAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
-}
-
-func (ImplAuthServer) Subscribe(req *NotifyRequest, stream Auth_SubscribeServer) error {
+func (ImplAuthServer) Subscribe(req *SubscribeRequest, stream Auth_SubscribeServer) error {
 	log.Printf("Received %v", req.GetMessage())
 
 	for {
@@ -107,7 +94,7 @@ func (ImplAuthServer) Subscribe(req *NotifyRequest, stream Auth_SubscribeServer)
 		message := fmt.Sprintf("message - %s", time.Now().Format("2006-01-02 15:04:05"))
 
 		// 通过 send 方法不断推送数据
-		err := stream.Send(&NotifyResponse{
+		err := stream.Send(&SubscribeResponse{
 			Message: message,
 		})
 

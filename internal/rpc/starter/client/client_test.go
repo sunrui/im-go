@@ -8,6 +8,7 @@ package client
 
 import (
 	"testing"
+	"time"
 
 	"internal/rpc/message/bottle_chat"
 	"internal/rpc/message/chat"
@@ -30,23 +31,27 @@ func (n Notify) OnDisconnect() {
 	println("OnDisconnect")
 }
 
-func (n Notify) OnChat(reply *chat.ReceiveReply) {
+func (n Notify) onClose() {
+	println("OnClose")
+}
+
+func (n Notify) OnChat(reply *chat.SubscribeReply) {
 	println("OnChat, reply", reply.Content.String())
 }
 
-func (n Notify) OnP2pChat(reply *p2p_chat.ReceiveReply) {
+func (n Notify) OnP2PChat(reply *p2p_chat.SubscribeReply) {
 	println("OnChat, reply", reply.String())
 }
 
-func (n Notify) OnGroupChat(reply *group_chat.ReceiveReply) {
+func (n Notify) OnGroupChat(reply *group_chat.SubscribeReply) {
 	println("OnChat, reply", reply.String())
 }
 
-func (n Notify) OnRoomChat(reply *room_chat.ReceiveReply) {
+func (n Notify) OnRoomChat(reply *room_chat.SubscribeReply) {
 	println("OnChat, reply", reply.String())
 }
 
-func (n Notify) OnBottleChat(reply *bottle_chat.ReceiveReply) {
+func (n Notify) OnBottleChat(reply *bottle_chat.SubscribeReply) {
 	println("OnChat, reply", reply.String())
 }
 
@@ -61,11 +66,12 @@ func TestClient_Start(t *testing.T) {
 
 	client.Start()
 
-	reply, err := client.ChatTo(&chat.ToRequest{
-		Source: &chat.Source{
-			SequenceId: "1",
-		},
-	})
-
-	println(reply, err)
+	// reply, err := client.ChatTo(&chat.ToRequest{
+	// 	Source: &chat.Source{
+	// 		SequenceId: "1",
+	// 	},
+	// })
+	//
+	// println(reply, err)
+	time.Sleep(time.Hour)
 }

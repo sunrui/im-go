@@ -12,11 +12,12 @@ import (
 	"log"
 	"net"
 
+	auth2 "internal/rpc/starter/auth"
+	interceptor2 "internal/rpc/starter/interceptor"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
-	"internal/rpc/auth"
-	"internal/rpc/interceptor"
 )
 
 func Server() {
@@ -38,12 +39,12 @@ func Server() {
 		// Enable TLS for all incoming connections.
 		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
 		// grpc.UnaryInterceptor(interceptor.ServerAuth),
-		grpc.ChainUnaryInterceptor(interceptor.ServerAuth, interceptor.NewSequenceInterpreter().Server()),
+		grpc.ChainUnaryInterceptor(interceptor2.ServerAuth, interceptor2.NewSequenceInterpreter().Server()),
 	}
 
 	s := grpc.NewServer(opts...)
 
-	auth.RegisterAuthServer(s, &auth.ImplAuthServer{})
+	auth2.RegisterAuthServer(s, &auth2.ImplAuthServer{})
 	reflection.Register(s)
 
 	defer func() {

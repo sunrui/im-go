@@ -63,12 +63,12 @@ message ToReply {
   string comment = 4; // 备注
 }
 
-// 接收请求
-message ReceiveRequest {
+// 订阅请求
+message SubscribeRequest {
 }
 
-// 接收回复
-message ReceiveReply {
+// 订阅回复
+message SubscribeReply {
   Source source = 1; // 来源
   Content content = 2; // 内容
 }
@@ -77,6 +77,6 @@ message ReceiveReply {
 service Chat {
   // 发送
   rpc To(ToRequest) returns(ToReply);
-  // 接收
-  rpc Receive(ReceiveRequest) returns(stream ReceiveReply);
+  // 订阅
+  rpc Subscribe(SubscribeRequest) returns(stream SubscribeReply);
 }

@@ -24,15 +24,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RoomChat_Receive_FullMethodName = "/internal.rpc.message.room_chat.RoomChat/Receive"
+	RoomChat_Subscribe_FullMethodName = "/internal.rpc.message.room_chat.RoomChat/Subscribe"
 )
 
 // RoomChatClient is the client API for RoomChat service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RoomChatClient interface {
-	// 接收
-	Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (RoomChat_ReceiveClient, error)
+	// 订阅
+	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (RoomChat_SubscribeClient, error)
 }
 
 type roomChatClient struct {
@@ -43,12 +43,12 @@ func NewRoomChatClient(cc grpc.ClientConnInterface) RoomChatClient {
 	return &roomChatClient{cc}
 }
 
-func (c *roomChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts ...grpc.CallOption) (RoomChat_ReceiveClient, error) {
-	stream, err := c.cc.NewStream(ctx, &RoomChat_ServiceDesc.Streams[0], RoomChat_Receive_FullMethodName, opts...)
+func (c *roomChatClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (RoomChat_SubscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &RoomChat_ServiceDesc.Streams[0], RoomChat_Subscribe_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &roomChatReceiveClient{stream}
+	x := &roomChatSubscribeClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -58,17 +58,17 @@ func (c *roomChatClient) Receive(ctx context.Context, in *ReceiveRequest, opts .
 	return x, nil
 }
 
-type RoomChat_ReceiveClient interface {
-	Recv() (*ReceiveReply, error)
+type RoomChat_SubscribeClient interface {
+	Recv() (*SubscribeReply, error)
 	grpc.ClientStream
 }
 
-type roomChatReceiveClient struct {
+type roomChatSubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *roomChatReceiveClient) Recv() (*ReceiveReply, error) {
-	m := new(ReceiveReply)
+func (x *roomChatSubscribeClient) Recv() (*SubscribeReply, error) {
+	m := new(SubscribeReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -79,8 +79,8 @@ func (x *roomChatReceiveClient) Recv() (*ReceiveReply, error) {
 // All implementations must embed UnimplementedRoomChatServer
 // for forward compatibility
 type RoomChatServer interface {
-	// 接收
-	Receive(*ReceiveRequest, RoomChat_ReceiveServer) error
+	// 订阅
+	Subscribe(*SubscribeRequest, RoomChat_SubscribeServer) error
 	mustEmbedUnimplementedRoomChatServer()
 }
 
@@ -88,8 +88,8 @@ type RoomChatServer interface {
 type UnimplementedRoomChatServer struct {
 }
 
-func (UnimplementedRoomChatServer) Receive(*ReceiveRequest, RoomChat_ReceiveServer) error {
-	return status.Errorf(codes.Unimplemented, "method Receive not implemented")
+func (UnimplementedRoomChatServer) Subscribe(*SubscribeRequest, RoomChat_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedRoomChatServer) mustEmbedUnimplementedRoomChatServer() {}
 
@@ -104,24 +104,24 @@ func RegisterRoomChatServer(s grpc.ServiceRegistrar, srv RoomChatServer) {
 	s.RegisterService(&RoomChat_ServiceDesc, srv)
 }
 
-func _RoomChat_Receive_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ReceiveRequest)
+func _RoomChat_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(RoomChatServer).Receive(m, &roomChatReceiveServer{stream})
+	return srv.(RoomChatServer).Subscribe(m, &roomChatSubscribeServer{stream})
 }
 
-type RoomChat_ReceiveServer interface {
-	Send(*ReceiveReply) error
+type RoomChat_SubscribeServer interface {
+	Send(*SubscribeReply) error
 	grpc.ServerStream
 }
 
-type roomChatReceiveServer struct {
+type roomChatSubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *roomChatReceiveServer) Send(m *ReceiveReply) error {
+func (x *roomChatSubscribeServer) Send(m *SubscribeReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -134,8 +134,8 @@ var RoomChat_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Receive",
-			Handler:       _RoomChat_Receive_Handler,
+			StreamName:    "Subscribe",
+			Handler:       _RoomChat_Subscribe_Handler,
 			ServerStreams: true,
 		},
 	},

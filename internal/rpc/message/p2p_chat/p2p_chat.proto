@@ -20,12 +20,12 @@ import "internal/rpc/message/p2p_chat/friend_reply.proto";
 package internal.rpc.message.p2p_chat;
 option go_package = "internal/rpc/message/p2p_chat";
 
-// 接收请求
-message ReceiveRequest {
+// 订阅请求
+message SubscribeRequest {
 }
 
-// 接收回复
-message ReceiveReply {
+// 订阅回复
+message SubscribeReply {
   string userId = 1; // 用户 id
 
   oneof Type {
@@ -47,6 +47,6 @@ message ReceiveReply {
 
 // 点对点聊天
 service P2pChat {
-  // 接收
-  rpc Receive(ReceiveRequest) returns(stream ReceiveReply);
+  // 订阅
+  rpc Subscribe(SubscribeRequest) returns(stream SubscribeReply);
 }

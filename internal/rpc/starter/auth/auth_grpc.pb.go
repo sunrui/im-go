@@ -7,7 +7,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.3
-// source: internal/rpc/auth/auth.proto
+// source: internal/rpc/starter/auth/auth.proto
 
 package auth
 
@@ -16,8 +16,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -26,10 +24,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Auth_Login_FullMethodName     = "/auth.Auth/Login"
-	Auth_GetState_FullMethodName  = "/auth.Auth/GetState"
-	Auth_Logout_FullMethodName    = "/auth.Auth/Logout"
-	Auth_Subscribe_FullMethodName = "/auth.Auth/Subscribe"
+	Auth_Login_FullMethodName     = "/internal.rpc.starter.auth.Auth/Login"
+	Auth_Subscribe_FullMethodName = "/internal.rpc.starter.auth.Auth/Subscribe"
 )
 
 // AuthClient is the client API for Auth service.
@@ -38,12 +34,8 @@ const (
 type AuthClient interface {
 	// 登录
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
-	// 获取状态
-	GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error)
-	// 登出
-	Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 订阅
-	Subscribe(ctx context.Context, in *NotifyRequest, opts ...grpc.CallOption) (Auth_SubscribeClient, error)
+	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (Auth_SubscribeClient, error)
 }
 
 type authClient struct {
@@ -63,25 +55,7 @@ func (c *authClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.C
 	return out, nil
 }
 
-func (c *authClient) GetState(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*GetStateReply, error) {
-	out := new(GetStateReply)
-	err := c.cc.Invoke(ctx, Auth_GetState_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authClient) Logout(ctx context.Context, in *wrapperspb.Int32Value, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authClient) Subscribe(ctx context.Context, in *NotifyRequest, opts ...grpc.CallOption) (Auth_SubscribeClient, error) {
+func (c *authClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (Auth_SubscribeClient, error) {
 	stream, err := c.cc.NewStream(ctx, &Auth_ServiceDesc.Streams[0], Auth_Subscribe_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
@@ -97,7 +71,7 @@ func (c *authClient) Subscribe(ctx context.Context, in *NotifyRequest, opts ...g
 }
 
 type Auth_SubscribeClient interface {
-	Recv() (*NotifyResponse, error)
+	Recv() (*SubscribeResponse, error)
 	grpc.ClientStream
 }
 
@@ -105,8 +79,8 @@ type authSubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *authSubscribeClient) Recv() (*NotifyResponse, error) {
-	m := new(NotifyResponse)
+func (x *authSubscribeClient) Recv() (*SubscribeResponse, error) {
+	m := new(SubscribeResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -119,12 +93,8 @@ func (x *authSubscribeClient) Recv() (*NotifyResponse, error) {
 type AuthServer interface {
 	// 登录
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
-	// 获取状态
-	GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error)
-	// 登出
-	Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error)
 	// 订阅
-	Subscribe(*NotifyRequest, Auth_SubscribeServer) error
+	Subscribe(*SubscribeRequest, Auth_SubscribeServer) error
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -135,13 +105,7 @@ type UnimplementedAuthServer struct {
 func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAuthServer) GetState(context.Context, *wrapperspb.Int32Value) (*GetStateReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
-}
-func (UnimplementedAuthServer) Logout(context.Context, *wrapperspb.Int32Value) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
-}
-func (UnimplementedAuthServer) Subscribe(*NotifyRequest, Auth_SubscribeServer) error {
+func (UnimplementedAuthServer) Subscribe(*SubscribeRequest, Auth_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
@@ -175,44 +139,8 @@ func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_GetState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(wrapperspb.Int32Value)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServer).GetState(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Auth_GetState_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).GetState(ctx, req.(*wrapperspb.Int32Value))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(wrapperspb.Int32Value)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServer).Logout(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Auth_Logout_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Logout(ctx, req.(*wrapperspb.Int32Value))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Auth_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(NotifyRequest)
+	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
@@ -220,7 +148,7 @@ func _Auth_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
 }
 
 type Auth_SubscribeServer interface {
-	Send(*NotifyResponse) error
+	Send(*SubscribeResponse) error
 	grpc.ServerStream
 }
 
@@ -228,7 +156,7 @@ type authSubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *authSubscribeServer) Send(m *NotifyResponse) error {
+func (x *authSubscribeServer) Send(m *SubscribeResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -236,20 +164,12 @@ func (x *authSubscribeServer) Send(m *NotifyResponse) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Auth_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "auth.Auth",
+	ServiceName: "internal.rpc.starter.auth.Auth",
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Login",
 			Handler:    _Auth_Login_Handler,
-		},
-		{
-			MethodName: "GetState",
-			Handler:    _Auth_GetState_Handler,
-		},
-		{
-			MethodName: "Logout",
-			Handler:    _Auth_Logout_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -259,5 +179,5 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "internal/rpc/auth/auth.proto",
+	Metadata: "internal/rpc/starter/auth/auth.proto",
 }

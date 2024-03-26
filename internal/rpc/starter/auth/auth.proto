@@ -1,0 +1,37 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-02-24 22:53:25
+ */
+syntax = "proto3";
+
+package internal.rpc.starter.auth;
+option go_package = "internal/rpc/starter/auth";
+
+// 登录请求
+message LoginRequest {
+  string token = 1;
+}
+
+// 登录回复
+message LoginReply {
+  string userId = 1;
+  string ip = 2;
+}
+
+message SubscribeRequest {
+  string userId = 1;
+  string message = 2;
+}
+
+message SubscribeResponse {
+  string message = 1;
+}
+
+// 认证
+service Auth {
+  // 登录
+  rpc Login(LoginRequest) returns(LoginReply);
+  // 订阅
+  rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse);
+}
