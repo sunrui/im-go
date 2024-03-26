@@ -6,8 +6,8 @@
 
 syntax = "proto3";
 
-package message.content;
-option go_package = "/message/content";
+package internal.rpc.message.content;
+option go_package = "internal/rpc/message/content";
 
 // 视频通话
 message VideoCall {

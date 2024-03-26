@@ -17,8 +17,8 @@ import "internal/rpc/message/p2p_chat/message_withdraw.proto";
 import "internal/rpc/message/p2p_chat/friend_request.proto";
 import "internal/rpc/message/p2p_chat/friend_reply.proto";
 
-package message.p2p_chat;
-option go_package = "/message/p2p_chat";
+package internal.rpc.message.p2p_chat;
+option go_package = "internal/rpc/message/p2p_chat";
 
 // 接收请求
 message ReceiveRequest {

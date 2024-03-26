@@ -6,8 +6,8 @@
 
 syntax = "proto3";
 
-package message.p2p_chat;
-option go_package = "/message/p2p_chat";
+package internal.rpc.message.p2p_chat;
+option go_package = "internal/rpc/message/p2p_chat";
 
 // 好友请求
 message FriendRequest {

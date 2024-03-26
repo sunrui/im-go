@@ -6,8 +6,8 @@
 
 syntax = "proto3";
 
-package message.group_chat;
-option go_package = "/message/group_chat";
+package internal.rpc.message.group_chat;
+option go_package = "internal/rpc/message/group_chat";
 
 // 加入
 message Join {

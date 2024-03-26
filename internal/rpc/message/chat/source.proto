@@ -6,8 +6,8 @@
 
 syntax = "proto3";
 
-package message.chat;
-option go_package = "/message/chat";
+package internal.rpc.message.chat;
+option go_package = "internal/rpc/message/chat";
 
 // 来源
 message Source {

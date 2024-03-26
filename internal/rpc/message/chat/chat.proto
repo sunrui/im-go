@@ -21,8 +21,8 @@ import "internal/rpc/message/content/voice.proto";
 import "internal/rpc/message/content/voice_call.proto";
 import "internal/rpc/message/content/video_call.proto";
 
-package message.chat;
-option go_package = "/message/chat";
+package internal.rpc.message.chat;
+option go_package = "internal/rpc/message/chat";
 
 // 聊天内容
 message Content {
@@ -37,8 +37,9 @@ message Content {
     content.Location location = 17; // 定位
     content.Card card = 18; // 卡片
     content.Withdraw withdraw = 19; // 撤回
-    content.VoiceCall voiceCall = 20; // 语音通话
-    content.VideoCall videoCall = 21; // 视频通话
+    content.Voice voice = 20; // 语音信息
+    content.VoiceCall voiceCall = 21; // 语音通话
+    content.VideoCall videoCall = 22; // 视频通话
   }
 }
 

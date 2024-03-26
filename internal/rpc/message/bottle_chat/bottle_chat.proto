@@ -6,8 +6,8 @@
 
 syntax = "proto3";
 
-package message.bottle_chat;
-option go_package = "/message/bottle_chat";
+package internal.rpc.message.bottle_chat;
+option go_package = "internal/rpc/message/bottle_chat";
 
 // 接收请求
 message ReceiveRequest {

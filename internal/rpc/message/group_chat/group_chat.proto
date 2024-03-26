@@ -13,8 +13,8 @@ import "internal/rpc/message/group_chat/leave.proto";
 import "internal/rpc/message/group_chat/mute.proto";
 import "internal/rpc/message/group_chat/unmute.proto";
 
-package message.group_chat;
-option go_package = "/message/group_chat";
+package internal.rpc.message.group_chat;
+option go_package = "internal/rpc/message/group_chat";
 
 // 接收请求
 message ReceiveRequest {
