@@ -13,7 +13,6 @@ package auth
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -100,12 +99,12 @@ type AuthServer interface {
 }
 
 // UnimplementedAuthServer must be embedded to have forward compatible implementations.
-type UnimplementedAuthServer struct{}
+type UnimplementedAuthServer struct {
+}
 
 func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-
 func (UnimplementedAuthServer) Subscribe(*SubscribeRequest, Auth_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }

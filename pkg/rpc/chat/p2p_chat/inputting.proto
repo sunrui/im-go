@@ -1,0 +1,15 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 12:10:51
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.chat.p2p_chat;
+option go_package = "pkg/rpc/chat/p2p_chat";
+
+// 正在输入
+message Inputting {
+  string userId = 1; // 用户 id
+}

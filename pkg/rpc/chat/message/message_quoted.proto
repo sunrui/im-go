@@ -1,0 +1,21 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 10:24:25
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.chat.message;
+option go_package = "pkg/rpc/chat/message";
+
+import "pkg/rpc/chat/message/message_text.proto";
+
+// 引用
+message MessageQuoted {
+  int32 sequenceId = 1; // 引用消息序号
+
+  oneof Type {
+    MessageText text = 2; // 文本
+  }
+}

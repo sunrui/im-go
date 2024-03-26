@@ -1,0 +1,19 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 23:33:37
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.chat.message;
+option go_package = "pkg/rpc/chat/message";
+
+// 表情包
+message MessageSticker {
+  oneof Uri {
+    string alias_name = 1; // 别名
+    string hash = 2; // 哈希
+    string url = 3; // 地址
+  }
+}

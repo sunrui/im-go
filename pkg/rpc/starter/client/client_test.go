@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"pkg/rpc/message/bottle_chat"
-	"pkg/rpc/message/chat"
-	"pkg/rpc/message/group_chat"
-	"pkg/rpc/message/p2p_chat"
-	"pkg/rpc/message/room_chat"
+	"pkg/rpc/chat/bottle_chat"
+	"pkg/rpc/chat/group_chat"
+	"pkg/rpc/chat/message"
+	"pkg/rpc/chat/p2p_chat"
+	"pkg/rpc/chat/room_chat"
 )
 
 type Notify struct{}
@@ -35,8 +35,8 @@ func (n Notify) onClose() {
 	println("OnClose")
 }
 
-func (n Notify) OnChat(reply *chat.SubscribeReply) {
-	println("OnChat, reply", reply.Content.String())
+func (n Notify) OnChat(reply *message.SubscribeReply) {
+	println("OnChat, reply", reply.Chat.String())
 }
 
 func (n Notify) OnP2PChat(reply *p2p_chat.SubscribeReply) {
@@ -66,8 +66,8 @@ func TestClient_Start(t *testing.T) {
 
 	client.Start()
 
-	// reply, err := client.ChatTo(&chat.ToRequest{
-	// 	Source: &chat.Source{
+	// reply, err := client.ChatTo(&message.ToRequest{
+	// 	Source: &message.Source{
 	// 		SequenceId: "1",
 	// 	},
 	// })

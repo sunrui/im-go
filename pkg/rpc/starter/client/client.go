@@ -15,15 +15,15 @@ import (
 
 	"pkg/rpc/starter/interceptor"
 
-	"pkg/rpc/message/bottle_chat"
+	"pkg/rpc/chat/bottle_chat"
 
-	"pkg/rpc/message/room_chat"
+	"pkg/rpc/chat/room_chat"
 
-	"pkg/rpc/message/group_chat"
+	"pkg/rpc/chat/group_chat"
 
-	"pkg/rpc/message/p2p_chat"
+	"pkg/rpc/chat/p2p_chat"
 
-	"pkg/rpc/message/chat"
+	"pkg/rpc/chat/message"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
@@ -38,7 +38,7 @@ type Client struct {
 	conn     *grpc.ClientConn // 连接
 
 	authClient       auth.AuthClient              // 认证客户端
-	chatClient       chat.ChatClient              // 聊天客户端
+	messageClient    message.MessageClient        // 消息客户端
 	p2pChatClient    p2p_chat.P2PChatClient       // 点对点聊天客户端
 	groupChatClient  group_chat.GroupChatClient   // 群聊天客户端
 	roomChatClient   room_chat.RoomChatClient     // 聊天室客户端
@@ -103,13 +103,13 @@ func (client Client) Start() {
 		}()
 
 		go func() {
-			client.chatClient = chat.NewChatClient(conn)
-			if chatSubscribeClient, err := client.chatClient.Subscribe(ctx, &chat.SubscribeRequest{}); err != nil {
+			client.messageClient = message.NewMessageClient(conn)
+			if messageSubscribeClient, err := client.messageClient.Subscribe(ctx, &message.SubscribeRequest{}); err != nil {
 				client.notifier.OnError(err)
 				return
 			} else {
 				for {
-					if reply, err := chatSubscribeClient.Recv(); err != nil {
+					if reply, err := messageSubscribeClient.Recv(); err != nil {
 						client.notifier.OnError(err)
 					} else {
 						if err == io.EOF {
@@ -210,8 +210,8 @@ func (client Client) Start() {
 }
 
 // ChatTo 聊天
-func (client Client) ChatTo(chatToRequest *chat.ToRequest) (*chat.ToReply, error) {
-	return client.chatClient.To(context.Background(), chatToRequest)
+func (client Client) ChatTo(chatToRequest *message.ToRequest) (*message.ToReply, error) {
+	return client.messageClient.To(context.Background(), chatToRequest)
 }
 
 // Close 关闭

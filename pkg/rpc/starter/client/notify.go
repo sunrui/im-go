@@ -7,11 +7,11 @@
 package client
 
 import (
-	"pkg/rpc/message/bottle_chat"
-	"pkg/rpc/message/chat"
-	"pkg/rpc/message/group_chat"
-	"pkg/rpc/message/p2p_chat"
-	"pkg/rpc/message/room_chat"
+	"pkg/rpc/chat/bottle_chat"
+	"pkg/rpc/chat/group_chat"
+	"pkg/rpc/chat/message"
+	"pkg/rpc/chat/p2p_chat"
+	"pkg/rpc/chat/room_chat"
 )
 
 type Notifier interface {
@@ -20,7 +20,7 @@ type Notifier interface {
 	OnDisconnect()
 	onClose()
 
-	OnChat(reply *chat.SubscribeReply)
+	OnChat(reply *message.SubscribeReply)
 	OnP2PChat(reply *p2p_chat.SubscribeReply)
 	OnGroupChat(reply *group_chat.SubscribeReply)
 	OnRoomChat(reply *room_chat.SubscribeReply)
