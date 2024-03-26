@@ -1,0 +1,16 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 13:23:08
+ */
+
+syntax = "proto3";
+
+package message.p2p_chat;
+option go_package = "/message/p2p_chat";
+
+// 好友请求
+message FriendRequest {
+  string userId = 1; // 用户 id
+  string comment = 2; // 备注
+}

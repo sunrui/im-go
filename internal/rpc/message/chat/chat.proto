@@ -1,0 +1,81 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 23:31:57
+ */
+
+syntax = "proto3";
+
+import "internal/rpc/message/chat/source.proto";
+import "internal/rpc/message/content/text.proto";
+import "internal/rpc/message/content/sticker.proto";
+import "internal/rpc/message/content/quoted.proto";
+import "internal/rpc/message/content/image.proto";
+import "internal/rpc/message/content/audio.proto";
+import "internal/rpc/message/content/video.proto";
+import "internal/rpc/message/content/file.proto";
+import "internal/rpc/message/content/location.proto";
+import "internal/rpc/message/content/card.proto";
+import "internal/rpc/message/content/withdraw.proto";
+import "internal/rpc/message/content/voice.proto";
+import "internal/rpc/message/content/voice_call.proto";
+import "internal/rpc/message/content/video_call.proto";
+
+package message.chat;
+option go_package = "/message/chat";
+
+// 聊天内容
+message ChatContent {
+  oneof Type {
+    content.Text text = 10; // 文字
+    content.Sticker sticker = 11; // 表情包
+    content.Quoted quoted = 12; // 引用
+    content.Image image = 13; // 图片
+    content.Audio audio = 14; // 音频
+    content.Video video = 15; // 视频
+    content.File file = 16; // 文件
+    content.Location location = 17; // 定位
+    content.Card card = 18; // 卡片
+    content.Withdraw withdraw = 19; // 撤回
+    content.VoiceCall voiceCall = 20; // 语音通话
+    content.VideoCall videoCall = 21; // 视频通话
+  }
+}
+
+// 发送请求
+message SendRequest {
+  Source source = 1; // 来源
+  ChatContent content = 2; // 内容
+}
+
+// 发送回复
+message SendReply {
+  int32 sequenceId = 1; // 序号
+
+  // 状态
+  enum Status {
+    SENT = 0; // 已发送
+    REJECT = 22; // 拒收
+  }
+
+  Status status = 3; // 状态
+  string comment = 4; // 备注
+}
+
+// 接收请求
+message ReceiveRequest {
+}
+
+// 接收回复
+message ReceiveReply {
+  Source source = 1; // 来源
+  ChatContent content = 2; // 内容
+}
+
+// 聊天
+service Chat {
+  // 发送
+  rpc Send(SendRequest) returns(SendReply);
+  // 接收
+  rpc Receive(ReceiveRequest) returns(stream ReceiveReply);
+}

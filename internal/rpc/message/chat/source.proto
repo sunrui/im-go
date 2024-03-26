@@ -1,0 +1,25 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 09:55:35
+ */
+
+syntax = "proto3";
+
+package message.chat;
+option go_package = "/message/chat";
+
+// 来源
+message Source {
+  int32 sequenceId = 1; // 序号
+
+  oneof Id {
+    string userId = 10; // 用户 id
+    string groupId = 11; // 群组 id
+    string roomId = 12; // 房间 id
+    string bottleId = 13; // 漂流瓶 id
+  }
+
+  int64 timestamp = 4; // 时间戳
+}
+
