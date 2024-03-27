@@ -1,0 +1,15 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 13:48:37
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.proto.group_chat;
+option go_package = "pkg/test/proto/group_chat";
+
+// 离开
+message Leave {
+  string userId = 1; // 用户 id
+}

@@ -6,7 +6,7 @@
 # Date: 2024-02-25 13:48:30
 #
 
-# Create the server CA certs.
+# Create the impl CA certs.
 openssl req -x509                               \
   -newkey rsa:4096                              \
   -nodes                                        \
@@ -18,7 +18,7 @@ openssl req -x509                               \
   -extensions ca                                \
   -sha256
 
-# Generate a server cert.
+# Generate a impl cert.
 openssl genrsa -out server_key.pem 4096
 openssl req -new                                \
   -key server_key.pem                           \
