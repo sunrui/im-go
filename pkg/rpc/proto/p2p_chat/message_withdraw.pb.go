@@ -7,16 +7,15 @@
 // versions:
 // 	protoc-gen-go v1.33.0
 // 	protoc        v4.25.3
-// source: pkg/test/proto/p2p_chat/message_withdraw.proto
+// source: pkg/rpc/proto/p2p_chat/message_withdraw.proto
 
 package p2p_chat
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -38,7 +37,7 @@ type MessageWithdraw struct {
 func (x *MessageWithdraw) Reset() {
 	*x = MessageWithdraw{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_msgTypes[0]
+		mi := &file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -51,7 +50,7 @@ func (x *MessageWithdraw) String() string {
 func (*MessageWithdraw) ProtoMessage() {}
 
 func (x *MessageWithdraw) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_msgTypes[0]
+	mi := &file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -64,7 +63,7 @@ func (x *MessageWithdraw) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MessageWithdraw.ProtoReflect.Descriptor instead.
 func (*MessageWithdraw) Descriptor() ([]byte, []int) {
-	return file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescGZIP(), []int{0}
+	return file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *MessageWithdraw) GetSequenceId() string {
@@ -74,41 +73,38 @@ func (x *MessageWithdraw) GetSequenceId() string {
 	return ""
 }
 
-var File_pkg_rpc_chat_p2p_chat_message_withdraw_proto protoreflect.FileDescriptor
+var File_pkg_rpc_proto_p2p_chat_message_withdraw_proto protoreflect.FileDescriptor
 
-var file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDesc = []byte{
-	0x0a, 0x2c, 0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x63, 0x68, 0x61, 0x74, 0x2f, 0x70,
-	0x32, 0x70, 0x5f, 0x63, 0x68, 0x61, 0x74, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x5f,
-	0x77, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x15,
-	0x70, 0x6b, 0x67, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x63, 0x68, 0x61, 0x74, 0x2e, 0x70, 0x32, 0x70,
-	0x5f, 0x63, 0x68, 0x61, 0x74, 0x22, 0x31, 0x0a, 0x0f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
-	0x57, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x65, 0x71, 0x75,
-	0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65,
-	0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x42, 0x17, 0x5a, 0x15, 0x70, 0x6b, 0x67, 0x2f,
-	0x72, 0x70, 0x63, 0x2f, 0x63, 0x68, 0x61, 0x74, 0x2f, 0x70, 0x32, 0x70, 0x5f, 0x63, 0x68, 0x61,
-	0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDesc = []byte{
+	0x0a, 0x2d, 0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
+	0x70, 0x32, 0x70, 0x5f, 0x63, 0x68, 0x61, 0x74, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x5f, 0x77, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12,
+	0x16, 0x70, 0x6b, 0x67, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x70,
+	0x32, 0x70, 0x5f, 0x63, 0x68, 0x61, 0x74, 0x22, 0x31, 0x0a, 0x0f, 0x4d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x57, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x65,
+	0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+	0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x42, 0x18, 0x5a, 0x16, 0x70, 0x6b,
+	0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x32, 0x70, 0x5f,
+	0x63, 0x68, 0x61, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescOnce sync.Once
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescData = file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDesc
+	file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescOnce sync.Once
+	file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescData = file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDesc
 )
 
-func file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescGZIP() []byte {
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescOnce.Do(func() {
-		file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescData = protoimpl.X.CompressGZIP(file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescData)
+func file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescGZIP() []byte {
+	file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescOnce.Do(func() {
+		file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescData = protoimpl.X.CompressGZIP(file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescData)
 	})
-	return file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDescData
+	return file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDescData
 }
 
-var (
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_goTypes  = []interface{}{
-		(*MessageWithdraw)(nil), // 0: pkg.test.proto.p2p_chat.MessageWithdraw
-	}
-)
-
-var file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_depIdxs = []int32{
+var file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_goTypes = []interface{}{
+	(*MessageWithdraw)(nil), // 0: pkg.rpc.proto.p2p_chat.MessageWithdraw
+}
+var file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -116,13 +112,13 @@ var file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_init() }
-func file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_init() {
-	if File_pkg_rpc_chat_p2p_chat_message_withdraw_proto != nil {
+func init() { file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_init() }
+func file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_init() {
+	if File_pkg_rpc_proto_p2p_chat_message_withdraw_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MessageWithdraw); i {
 			case 0:
 				return &v.state
@@ -139,18 +135,18 @@ func file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDesc,
+			RawDescriptor: file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_goTypes,
-		DependencyIndexes: file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_depIdxs,
-		MessageInfos:      file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_msgTypes,
+		GoTypes:           file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_goTypes,
+		DependencyIndexes: file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_depIdxs,
+		MessageInfos:      file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_msgTypes,
 	}.Build()
-	File_pkg_rpc_chat_p2p_chat_message_withdraw_proto = out.File
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_rawDesc = nil
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_goTypes = nil
-	file_pkg_rpc_chat_p2p_chat_message_withdraw_proto_depIdxs = nil
+	File_pkg_rpc_proto_p2p_chat_message_withdraw_proto = out.File
+	file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_rawDesc = nil
+	file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_goTypes = nil
+	file_pkg_rpc_proto_p2p_chat_message_withdraw_proto_depIdxs = nil
 }

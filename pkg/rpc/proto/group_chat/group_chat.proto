@@ -6,15 +6,15 @@
 
 syntax = "proto3";
 
-import "pkg/test/chat/group_chat/online.proto";
-import "pkg/test/chat/group_chat/offline.proto";
-import "pkg/test/chat/group_chat/join.proto";
-import "pkg/test/chat/group_chat/leave.proto";
-import "pkg/test/chat/group_chat/mute.proto";
-import "pkg/test/chat/group_chat/unmute.proto";
+import "pkg/rpc/proto/group_chat/online.proto";
+import "pkg/rpc/proto/group_chat/offline.proto";
+import "pkg/rpc/proto/group_chat/join.proto";
+import "pkg/rpc/proto/group_chat/leave.proto";
+import "pkg/rpc/proto/group_chat/mute.proto";
+import "pkg/rpc/proto/group_chat/unmute.proto";
 
 package pkg.rpc.proto.group_chat;
-option go_package = "pkg/test/proto/group_chat";
+option go_package = "pkg/rpc/proto/group_chat";
 
 // 订阅请求
 message SubscribeRequest {

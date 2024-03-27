@@ -7,16 +7,15 @@
 // versions:
 // 	protoc-gen-go v1.33.0
 // 	protoc        v4.25.3
-// source: pkg/test/proto/message/message_quoted.proto
+// source: pkg/rpc/proto/message/message_quoted.proto
 
 package message
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -42,7 +41,7 @@ type MessageQuoted struct {
 func (x *MessageQuoted) Reset() {
 	*x = MessageQuoted{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_pkg_rpc_chat_message_message_quoted_proto_msgTypes[0]
+		mi := &file_pkg_rpc_proto_message_message_quoted_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -55,7 +54,7 @@ func (x *MessageQuoted) String() string {
 func (*MessageQuoted) ProtoMessage() {}
 
 func (x *MessageQuoted) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_rpc_chat_message_message_quoted_proto_msgTypes[0]
+	mi := &file_pkg_rpc_proto_message_message_quoted_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -68,7 +67,7 @@ func (x *MessageQuoted) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MessageQuoted.ProtoReflect.Descriptor instead.
 func (*MessageQuoted) Descriptor() ([]byte, []int) {
-	return file_pkg_rpc_chat_message_message_quoted_proto_rawDescGZIP(), []int{0}
+	return file_pkg_rpc_proto_message_message_quoted_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *MessageQuoted) GetSequenceId() int32 {
@@ -102,49 +101,47 @@ type MessageQuoted_Text struct {
 
 func (*MessageQuoted_Text) isMessageQuoted_Type() {}
 
-var File_pkg_rpc_chat_message_message_quoted_proto protoreflect.FileDescriptor
+var File_pkg_rpc_proto_message_message_quoted_proto protoreflect.FileDescriptor
 
-var file_pkg_rpc_chat_message_message_quoted_proto_rawDesc = []byte{
-	0x0a, 0x29, 0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x63, 0x68, 0x61, 0x74, 0x2f, 0x6d,
-	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x5f, 0x71,
-	0x75, 0x6f, 0x74, 0x65, 0x64, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x14, 0x70, 0x6b, 0x67,
-	0x2e, 0x72, 0x70, 0x63, 0x2e, 0x63, 0x68, 0x61, 0x74, 0x2e, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x1a, 0x27, 0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x63, 0x68, 0x61, 0x74, 0x2f,
+var file_pkg_rpc_proto_message_message_quoted_proto_rawDesc = []byte{
+	0x0a, 0x2a, 0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
 	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x5f,
-	0x74, 0x65, 0x78, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x70, 0x0a, 0x0d, 0x4d, 0x65,
-	0x73, 0x73, 0x61, 0x67, 0x65, 0x51, 0x75, 0x6f, 0x74, 0x65, 0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x73,
-	0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52,
-	0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x12, 0x37, 0x0a, 0x04, 0x74,
-	0x65, 0x78, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x70, 0x6b, 0x67, 0x2e,
-	0x72, 0x70, 0x63, 0x2e, 0x63, 0x68, 0x61, 0x74, 0x2e, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
-	0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x54, 0x65, 0x78, 0x74, 0x48, 0x00, 0x52, 0x04,
-	0x74, 0x65, 0x78, 0x74, 0x42, 0x06, 0x0a, 0x04, 0x54, 0x79, 0x70, 0x65, 0x42, 0x16, 0x5a, 0x14,
-	0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x63, 0x68, 0x61, 0x74, 0x2f, 0x6d, 0x65, 0x73,
-	0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x71, 0x75, 0x6f, 0x74, 0x65, 0x64, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x15, 0x70, 0x6b,
+	0x67, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6d, 0x65, 0x73, 0x73,
+	0x61, 0x67, 0x65, 0x1a, 0x28, 0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x5f, 0x74, 0x65, 0x78, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x71, 0x0a,
+	0x0d, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x51, 0x75, 0x6f, 0x74, 0x65, 0x64, 0x12, 0x1e,
+	0x0a, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x05, 0x52, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x12, 0x38,
+	0x0a, 0x04, 0x74, 0x65, 0x78, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x22, 0x2e, 0x70,
+	0x6b, 0x67, 0x2e, 0x72, 0x70, 0x63, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6d, 0x65, 0x73,
+	0x73, 0x61, 0x67, 0x65, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x54, 0x65, 0x78, 0x74,
+	0x48, 0x00, 0x52, 0x04, 0x74, 0x65, 0x78, 0x74, 0x42, 0x06, 0x0a, 0x04, 0x54, 0x79, 0x70, 0x65,
+	0x42, 0x17, 0x5a, 0x15, 0x70, 0x6b, 0x67, 0x2f, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
-	file_pkg_rpc_chat_message_message_quoted_proto_rawDescOnce sync.Once
-	file_pkg_rpc_chat_message_message_quoted_proto_rawDescData = file_pkg_rpc_chat_message_message_quoted_proto_rawDesc
+	file_pkg_rpc_proto_message_message_quoted_proto_rawDescOnce sync.Once
+	file_pkg_rpc_proto_message_message_quoted_proto_rawDescData = file_pkg_rpc_proto_message_message_quoted_proto_rawDesc
 )
 
-func file_pkg_rpc_chat_message_message_quoted_proto_rawDescGZIP() []byte {
-	file_pkg_rpc_chat_message_message_quoted_proto_rawDescOnce.Do(func() {
-		file_pkg_rpc_chat_message_message_quoted_proto_rawDescData = protoimpl.X.CompressGZIP(file_pkg_rpc_chat_message_message_quoted_proto_rawDescData)
+func file_pkg_rpc_proto_message_message_quoted_proto_rawDescGZIP() []byte {
+	file_pkg_rpc_proto_message_message_quoted_proto_rawDescOnce.Do(func() {
+		file_pkg_rpc_proto_message_message_quoted_proto_rawDescData = protoimpl.X.CompressGZIP(file_pkg_rpc_proto_message_message_quoted_proto_rawDescData)
 	})
-	return file_pkg_rpc_chat_message_message_quoted_proto_rawDescData
+	return file_pkg_rpc_proto_message_message_quoted_proto_rawDescData
 }
 
-var (
-	file_pkg_rpc_chat_message_message_quoted_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-	file_pkg_rpc_chat_message_message_quoted_proto_goTypes  = []interface{}{
-		(*MessageQuoted)(nil), // 0: pkg.test.proto.message.MessageQuoted
-		(*MessageText)(nil),   // 1: pkg.test.proto.message.MessageText
-	}
-)
-
-var file_pkg_rpc_chat_message_message_quoted_proto_depIdxs = []int32{
-	1, // 0: pkg.test.proto.message.MessageQuoted.text:type_name -> pkg.test.proto.message.MessageText
+var file_pkg_rpc_proto_message_message_quoted_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_pkg_rpc_proto_message_message_quoted_proto_goTypes = []interface{}{
+	(*MessageQuoted)(nil), // 0: pkg.rpc.proto.message.MessageQuoted
+	(*MessageText)(nil),   // 1: pkg.rpc.proto.message.MessageText
+}
+var file_pkg_rpc_proto_message_message_quoted_proto_depIdxs = []int32{
+	1, // 0: pkg.rpc.proto.message.MessageQuoted.text:type_name -> pkg.rpc.proto.message.MessageText
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -152,14 +149,14 @@ var file_pkg_rpc_chat_message_message_quoted_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_pkg_rpc_chat_message_message_quoted_proto_init() }
-func file_pkg_rpc_chat_message_message_quoted_proto_init() {
-	if File_pkg_rpc_chat_message_message_quoted_proto != nil {
+func init() { file_pkg_rpc_proto_message_message_quoted_proto_init() }
+func file_pkg_rpc_proto_message_message_quoted_proto_init() {
+	if File_pkg_rpc_proto_message_message_quoted_proto != nil {
 		return
 	}
-	file_pkg_rpc_chat_message_message_text_proto_init()
+	file_pkg_rpc_proto_message_message_text_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_pkg_rpc_chat_message_message_quoted_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_pkg_rpc_proto_message_message_quoted_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MessageQuoted); i {
 			case 0:
 				return &v.state
@@ -172,25 +169,25 @@ func file_pkg_rpc_chat_message_message_quoted_proto_init() {
 			}
 		}
 	}
-	file_pkg_rpc_chat_message_message_quoted_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_pkg_rpc_proto_message_message_quoted_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*MessageQuoted_Text)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_pkg_rpc_chat_message_message_quoted_proto_rawDesc,
+			RawDescriptor: file_pkg_rpc_proto_message_message_quoted_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_pkg_rpc_chat_message_message_quoted_proto_goTypes,
-		DependencyIndexes: file_pkg_rpc_chat_message_message_quoted_proto_depIdxs,
-		MessageInfos:      file_pkg_rpc_chat_message_message_quoted_proto_msgTypes,
+		GoTypes:           file_pkg_rpc_proto_message_message_quoted_proto_goTypes,
+		DependencyIndexes: file_pkg_rpc_proto_message_message_quoted_proto_depIdxs,
+		MessageInfos:      file_pkg_rpc_proto_message_message_quoted_proto_msgTypes,
 	}.Build()
-	File_pkg_rpc_chat_message_message_quoted_proto = out.File
-	file_pkg_rpc_chat_message_message_quoted_proto_rawDesc = nil
-	file_pkg_rpc_chat_message_message_quoted_proto_goTypes = nil
-	file_pkg_rpc_chat_message_message_quoted_proto_depIdxs = nil
+	File_pkg_rpc_proto_message_message_quoted_proto = out.File
+	file_pkg_rpc_proto_message_message_quoted_proto_rawDesc = nil
+	file_pkg_rpc_proto_message_message_quoted_proto_goTypes = nil
+	file_pkg_rpc_proto_message_message_quoted_proto_depIdxs = nil
 }

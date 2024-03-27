@@ -7,13 +7,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.3
-// source: pkg/test/proto/bottle_chat/bottle_chat.proto
+// source: pkg/rpc/proto/bottle_chat/bottle_chat.proto
 
 package bottle_chat
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,7 +24,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BottleChat_Subscribe_FullMethodName = "/pkg.test.proto.bottle_chat.BottleChat/Subscribe"
+	BottleChat_Subscribe_FullMethodName = "/pkg.rpc.proto.bottle_chat.BottleChat/Subscribe"
 )
 
 // BottleChatClient is the client API for BottleChat service.
@@ -76,7 +75,7 @@ func (x *bottleChatSubscribeClient) Recv() (*SubscribeReply, error) {
 	return m, nil
 }
 
-// BottleChatServer is the impl API for BottleChat service.
+// BottleChatServer is the server API for BottleChat service.
 // All implementations must embed UnimplementedBottleChatServer
 // for forward compatibility
 type BottleChatServer interface {
@@ -86,7 +85,8 @@ type BottleChatServer interface {
 }
 
 // UnimplementedBottleChatServer must be embedded to have forward compatible implementations.
-type UnimplementedBottleChatServer struct{}
+type UnimplementedBottleChatServer struct {
+}
 
 func (UnimplementedBottleChatServer) Subscribe(*SubscribeRequest, BottleChat_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -129,7 +129,7 @@ func (x *bottleChatSubscribeServer) Send(m *SubscribeReply) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var BottleChat_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pkg.test.proto.bottle_chat.BottleChat",
+	ServiceName: "pkg.rpc.proto.bottle_chat.BottleChat",
 	HandlerType: (*BottleChatServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
@@ -139,5 +139,5 @@ var BottleChat_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "pkg/test/proto/bottle_chat/bottle_chat.proto",
+	Metadata: "pkg/rpc/proto/bottle_chat/bottle_chat.proto",
 }

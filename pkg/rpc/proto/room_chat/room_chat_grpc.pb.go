@@ -7,13 +7,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.3
-// source: pkg/test/proto/room_chat/room_chat.proto
+// source: pkg/rpc/proto/room_chat/room_chat.proto
 
 package room_chat
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,7 +24,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RoomChat_Subscribe_FullMethodName = "/pkg.test.proto.room_chat.RoomChat/Subscribe"
+	RoomChat_Subscribe_FullMethodName = "/pkg.rpc.proto.room_chat.RoomChat/Subscribe"
 )
 
 // RoomChatClient is the client API for RoomChat service.
@@ -76,7 +75,7 @@ func (x *roomChatSubscribeClient) Recv() (*SubscribeReply, error) {
 	return m, nil
 }
 
-// RoomChatServer is the impl API for RoomChat service.
+// RoomChatServer is the server API for RoomChat service.
 // All implementations must embed UnimplementedRoomChatServer
 // for forward compatibility
 type RoomChatServer interface {
@@ -86,7 +85,8 @@ type RoomChatServer interface {
 }
 
 // UnimplementedRoomChatServer must be embedded to have forward compatible implementations.
-type UnimplementedRoomChatServer struct{}
+type UnimplementedRoomChatServer struct {
+}
 
 func (UnimplementedRoomChatServer) Subscribe(*SubscribeRequest, RoomChat_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -129,7 +129,7 @@ func (x *roomChatSubscribeServer) Send(m *SubscribeReply) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var RoomChat_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pkg.test.proto.room_chat.RoomChat",
+	ServiceName: "pkg.rpc.proto.room_chat.RoomChat",
 	HandlerType: (*RoomChatServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
@@ -139,5 +139,5 @@ var RoomChat_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "pkg/test/proto/room_chat/room_chat.proto",
+	Metadata: "pkg/rpc/proto/room_chat/room_chat.proto",
 }

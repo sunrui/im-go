@@ -7,13 +7,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.3
-// source: pkg/test/proto/group_chat/group_chat.proto
+// source: pkg/rpc/proto/group_chat/group_chat.proto
 
 package group_chat
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,7 +24,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GroupChat_Subscribe_FullMethodName = "/pkg.test.proto.group_chat.GroupChat/Subscribe"
+	GroupChat_Subscribe_FullMethodName = "/pkg.rpc.proto.group_chat.GroupChat/Subscribe"
 )
 
 // GroupChatClient is the client API for GroupChat service.
@@ -76,7 +75,7 @@ func (x *groupChatSubscribeClient) Recv() (*SubscribeReply, error) {
 	return m, nil
 }
 
-// GroupChatServer is the impl API for GroupChat service.
+// GroupChatServer is the server API for GroupChat service.
 // All implementations must embed UnimplementedGroupChatServer
 // for forward compatibility
 type GroupChatServer interface {
@@ -86,7 +85,8 @@ type GroupChatServer interface {
 }
 
 // UnimplementedGroupChatServer must be embedded to have forward compatible implementations.
-type UnimplementedGroupChatServer struct{}
+type UnimplementedGroupChatServer struct {
+}
 
 func (UnimplementedGroupChatServer) Subscribe(*SubscribeRequest, GroupChat_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -129,7 +129,7 @@ func (x *groupChatSubscribeServer) Send(m *SubscribeReply) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var GroupChat_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pkg.test.proto.group_chat.GroupChat",
+	ServiceName: "pkg.rpc.proto.group_chat.GroupChat",
 	HandlerType: (*GroupChatServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
@@ -139,5 +139,5 @@ var GroupChat_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "pkg/test/proto/group_chat/group_chat.proto",
+	Metadata: "pkg/rpc/proto/group_chat/group_chat.proto",
 }

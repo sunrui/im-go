@@ -6,22 +6,22 @@
 
 syntax = "proto3";
 
-import "pkg/test/chat/message/message_text.proto";
-import "pkg/test/chat/message/message_sticker.proto";
-import "pkg/test/chat/message/message_quoted.proto";
-import "pkg/test/chat/message/message_image.proto";
-import "pkg/test/chat/message/message_audio.proto";
-import "pkg/test/chat/message/message_video.proto";
-import "pkg/test/chat/message/message_file.proto";
-import "pkg/test/chat/message/message_location.proto";
-import "pkg/test/chat/message/message_card.proto";
-import "pkg/test/chat/message/message_withdraw.proto";
-import "pkg/test/chat/message/message_voice.proto";
-import "pkg/test/chat/message/message_voice_call.proto";
-import "pkg/test/chat/message/message_video_call.proto";
+import "pkg/rpc/proto/message/message_text.proto";
+import "pkg/rpc/proto/message/message_sticker.proto";
+import "pkg/rpc/proto/message/message_quoted.proto";
+import "pkg/rpc/proto/message/message_image.proto";
+import "pkg/rpc/proto/message/message_audio.proto";
+import "pkg/rpc/proto/message/message_video.proto";
+import "pkg/rpc/proto/message/message_file.proto";
+import "pkg/rpc/proto/message/message_location.proto";
+import "pkg/rpc/proto/message/message_card.proto";
+import "pkg/rpc/proto/message/message_withdraw.proto";
+import "pkg/rpc/proto/message/message_voice.proto";
+import "pkg/rpc/proto/message/message_voice_call.proto";
+import "pkg/rpc/proto/message/message_video_call.proto";
 
 package pkg.rpc.proto.message;
-option go_package = "pkg/test/proto/message";
+option go_package = "pkg/rpc/proto/message";
 
 // 来源
 message Source {
@@ -64,7 +64,7 @@ message ToRequest {
 
 // 发送回复
 message ToReply {
-  int32 sequenceId = 1; // 序号
+  string sequenceId = 1; // 序号
 
   // 状态
   enum Status {

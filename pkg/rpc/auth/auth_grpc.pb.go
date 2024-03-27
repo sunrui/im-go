@@ -7,16 +7,15 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.3
-// source: pkg/test/starter/auth/auth.proto
+// source: pkg/rpc/auth/auth.proto
 
 package auth
 
 import (
-	"context"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	context "context"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,8 +24,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Auth_Login_FullMethodName     = "/pkg.test.starter.auth.Auth/Login"
-	Auth_Subscribe_FullMethodName = "/pkg.test.starter.auth.Auth/Subscribe"
+	Auth_Login_FullMethodName     = "/pkg.rpc.starter.auth.Auth/Login"
+	Auth_Subscribe_FullMethodName = "/pkg.rpc.starter.auth.Auth/Subscribe"
 )
 
 // AuthClient is the client API for Auth service.
@@ -88,7 +87,7 @@ func (x *authSubscribeClient) Recv() (*SubscribeResponse, error) {
 	return m, nil
 }
 
-// AuthServer is the impl API for Auth service.
+// AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
@@ -100,12 +99,12 @@ type AuthServer interface {
 }
 
 // UnimplementedAuthServer must be embedded to have forward compatible implementations.
-type UnimplementedAuthServer struct{}
+type UnimplementedAuthServer struct {
+}
 
 func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-
 func (UnimplementedAuthServer) Subscribe(*SubscribeRequest, Auth_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
@@ -165,7 +164,7 @@ func (x *authSubscribeServer) Send(m *SubscribeResponse) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Auth_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pkg.test.starter.auth.Auth",
+	ServiceName: "pkg.rpc.starter.auth.Auth",
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -180,5 +179,5 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "pkg/test/starter/auth/auth.proto",
+	Metadata: "pkg/rpc/auth/auth.proto",
 }

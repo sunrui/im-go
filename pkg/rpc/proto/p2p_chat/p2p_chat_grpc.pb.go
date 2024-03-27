@@ -7,13 +7,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.3
-// source: pkg/test/proto/p2p_chat/p2p_chat.proto
+// source: pkg/rpc/proto/p2p_chat/p2p_chat.proto
 
 package p2p_chat
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,7 +24,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	P2PChat_Subscribe_FullMethodName = "/pkg.test.proto.p2p_chat.P2pChat/Subscribe"
+	P2PChat_Subscribe_FullMethodName = "/pkg.rpc.proto.p2p_chat.P2pChat/Subscribe"
 )
 
 // P2PChatClient is the client API for P2PChat service.
@@ -76,7 +75,7 @@ func (x *p2PChatSubscribeClient) Recv() (*SubscribeReply, error) {
 	return m, nil
 }
 
-// P2PChatServer is the impl API for P2PChat service.
+// P2PChatServer is the server API for P2PChat service.
 // All implementations must embed UnimplementedP2PChatServer
 // for forward compatibility
 type P2PChatServer interface {
@@ -86,7 +85,8 @@ type P2PChatServer interface {
 }
 
 // UnimplementedP2PChatServer must be embedded to have forward compatible implementations.
-type UnimplementedP2PChatServer struct{}
+type UnimplementedP2PChatServer struct {
+}
 
 func (UnimplementedP2PChatServer) Subscribe(*SubscribeRequest, P2PChat_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -129,7 +129,7 @@ func (x *p2PChatSubscribeServer) Send(m *SubscribeReply) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var P2PChat_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pkg.test.proto.p2p_chat.P2pChat",
+	ServiceName: "pkg.rpc.proto.p2p_chat.P2pChat",
 	HandlerType: (*P2PChatServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
@@ -139,5 +139,5 @@ var P2PChat_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "pkg/test/proto/p2p_chat/p2p_chat.proto",
+	Metadata: "pkg/rpc/proto/p2p_chat/p2p_chat.proto",
 }

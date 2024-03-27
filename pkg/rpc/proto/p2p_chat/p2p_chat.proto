@@ -6,19 +6,19 @@
 
 syntax = "proto3";
 
-import "pkg/test/chat/p2p_chat/online.proto";
-import "pkg/test/chat/p2p_chat/offline.proto";
-import "pkg/test/chat/p2p_chat/inputting.proto";
-import "pkg/test/chat/p2p_chat/input_stop.proto";
-import "pkg/test/chat/p2p_chat/message_delivered.proto";
-import "pkg/test/chat/p2p_chat/message_read.proto";
-import "pkg/test/chat/p2p_chat/message_reject.proto";
-import "pkg/test/chat/p2p_chat/message_withdraw.proto";
-import "pkg/test/chat/p2p_chat/friend_request.proto";
-import "pkg/test/chat/p2p_chat/friend_reply.proto";
+import "pkg/rpc/proto/p2p_chat/online.proto";
+import "pkg/rpc/proto/p2p_chat/offline.proto";
+import "pkg/rpc/proto/p2p_chat/inputting.proto";
+import "pkg/rpc/proto/p2p_chat/input_stop.proto";
+import "pkg/rpc/proto/p2p_chat/message_delivered.proto";
+import "pkg/rpc/proto/p2p_chat/message_read.proto";
+import "pkg/rpc/proto/p2p_chat/message_reject.proto";
+import "pkg/rpc/proto/p2p_chat/message_withdraw.proto";
+import "pkg/rpc/proto/p2p_chat/friend_request.proto";
+import "pkg/rpc/proto/p2p_chat/friend_reply.proto";
 
 package pkg.rpc.proto.p2p_chat;
-option go_package = "pkg/test/proto/p2p_chat";
+option go_package = "pkg/rpc/proto/p2p_chat";
 
 // 订阅请求
 message SubscribeRequest {

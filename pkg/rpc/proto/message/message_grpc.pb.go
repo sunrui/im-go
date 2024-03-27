@@ -7,13 +7,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.25.3
-// source: pkg/test/proto/message/message.proto
+// source: pkg/rpc/proto/message/message.proto
 
 package message
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,8 +24,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Message_To_FullMethodName        = "/pkg.test.proto.message.Message/To"
-	Message_Subscribe_FullMethodName = "/pkg.test.proto.message.Message/Subscribe"
+	Message_To_FullMethodName        = "/pkg.rpc.proto.message.Message/To"
+	Message_Subscribe_FullMethodName = "/pkg.rpc.proto.message.Message/Subscribe"
 )
 
 // MessageClient is the client API for Message service.
@@ -88,7 +87,7 @@ func (x *messageSubscribeClient) Recv() (*SubscribeReply, error) {
 	return m, nil
 }
 
-// MessageServer is the impl API for Message service.
+// MessageServer is the server API for Message service.
 // All implementations must embed UnimplementedMessageServer
 // for forward compatibility
 type MessageServer interface {
@@ -100,12 +99,12 @@ type MessageServer interface {
 }
 
 // UnimplementedMessageServer must be embedded to have forward compatible implementations.
-type UnimplementedMessageServer struct{}
+type UnimplementedMessageServer struct {
+}
 
 func (UnimplementedMessageServer) To(context.Context, *ToRequest) (*ToReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method To not implemented")
 }
-
 func (UnimplementedMessageServer) Subscribe(*SubscribeRequest, Message_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
@@ -165,7 +164,7 @@ func (x *messageSubscribeServer) Send(m *SubscribeReply) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Message_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pkg.test.proto.message.Message",
+	ServiceName: "pkg.rpc.proto.message.Message",
 	HandlerType: (*MessageServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -180,5 +179,5 @@ var Message_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "pkg/test/proto/message/message.proto",
+	Metadata: "pkg/rpc/proto/message/message.proto",
 }

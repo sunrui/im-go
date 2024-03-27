@@ -7,7 +7,7 @@
 syntax = "proto3";
 
 package pkg.rpc.proto.group_chat;
-option go_package = "pkg/test/proto/group_chat";
+option go_package = "pkg/rpc/proto/group_chat";
 
 // 离开
 message Leave {

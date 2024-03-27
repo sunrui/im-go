@@ -39,6 +39,12 @@ type MessageServer struct {
 
 // To 发送消息
 func (MessageServer) To(context.Context, *message.ToRequest) (*message.ToReply, error) {
+	return &message.ToReply{
+		SequenceId: "test_sequence_id",
+		Status:     0,
+		Comment:    "comment",
+	}, nil
+
 	return nil, status.Errorf(codes.Unimplemented, "method To not implemented")
 }
 

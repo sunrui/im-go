@@ -7,7 +7,7 @@
 syntax = "proto3";
 
 package pkg.rpc.proto.room_chat;
-option go_package = "pkg/test/proto/room_chat";
+option go_package = "pkg/rpc/proto/room_chat";
 
 // 订阅请求
 message SubscribeRequest {
