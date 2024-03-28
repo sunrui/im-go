@@ -35,8 +35,8 @@ type MessageServer struct {
 	message.UnimplementedMessageServer
 }
 
-// To 发送消息
-func (MessageServer) To(context.Context, *message.ToRequest) (*message.ToReply, error) {
+// ChatTo 发送消息
+func (MessageServer) ChatTo(context.Context, *message.ToRequest) (*message.ToReply, error) {
 	return &message.ToReply{
 		SequenceId: "test_sequence_id",
 		Status:     0,

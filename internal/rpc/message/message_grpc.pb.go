@@ -8,10 +8,10 @@ package message
 
 import (
 	"context"
+	"pkg/rpc/proto/message"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"pkg/rpc/proto/message"
 )
 
 // Server 消息服务
@@ -19,9 +19,9 @@ type Server struct {
 	message.UnimplementedMessageServer
 }
 
-// To 发送消息
-func (Server) To(context.Context, *message.ToRequest) (*message.ToReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method To not implemented")
+// ChatTo 发送消息
+func (Server) ChatTo(context.Context, *message.ToRequest) (*message.ToReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChatTo not implemented")
 }
 
 // Subscribe 订阅消息

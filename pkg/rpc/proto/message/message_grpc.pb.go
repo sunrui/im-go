@@ -24,7 +24,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Message_To_FullMethodName        = "/pkg.rpc.proto.message.Message/To"
+	Message_ChatTo_FullMethodName    = "/pkg.rpc.proto.message.Message/ChatTo"
 	Message_Subscribe_FullMethodName = "/pkg.rpc.proto.message.Message/Subscribe"
 )
 
@@ -33,7 +33,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageClient interface {
 	// 发送
-	To(ctx context.Context, in *ToRequest, opts ...grpc.CallOption) (*ToReply, error)
+	ChatTo(ctx context.Context, in *ToRequest, opts ...grpc.CallOption) (*ToReply, error)
 	// 订阅
 	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (Message_SubscribeClient, error)
 }
@@ -46,9 +46,9 @@ func NewMessageClient(cc grpc.ClientConnInterface) MessageClient {
 	return &messageClient{cc}
 }
 
-func (c *messageClient) To(ctx context.Context, in *ToRequest, opts ...grpc.CallOption) (*ToReply, error) {
+func (c *messageClient) ChatTo(ctx context.Context, in *ToRequest, opts ...grpc.CallOption) (*ToReply, error) {
 	out := new(ToReply)
-	err := c.cc.Invoke(ctx, Message_To_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Message_ChatTo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (x *messageSubscribeClient) Recv() (*SubscribeReply, error) {
 // for forward compatibility
 type MessageServer interface {
 	// 发送
-	To(context.Context, *ToRequest) (*ToReply, error)
+	ChatTo(context.Context, *ToRequest) (*ToReply, error)
 	// 订阅
 	Subscribe(*SubscribeRequest, Message_SubscribeServer) error
 	mustEmbedUnimplementedMessageServer()
@@ -102,8 +102,8 @@ type MessageServer interface {
 type UnimplementedMessageServer struct {
 }
 
-func (UnimplementedMessageServer) To(context.Context, *ToRequest) (*ToReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method To not implemented")
+func (UnimplementedMessageServer) ChatTo(context.Context, *ToRequest) (*ToReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChatTo not implemented")
 }
 func (UnimplementedMessageServer) Subscribe(*SubscribeRequest, Message_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -121,20 +121,20 @@ func RegisterMessageServer(s grpc.ServiceRegistrar, srv MessageServer) {
 	s.RegisterService(&Message_ServiceDesc, srv)
 }
 
-func _Message_To_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Message_ChatTo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ToRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServer).To(ctx, in)
+		return srv.(MessageServer).ChatTo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Message_To_FullMethodName,
+		FullMethod: Message_ChatTo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServer).To(ctx, req.(*ToRequest))
+		return srv.(MessageServer).ChatTo(ctx, req.(*ToRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -168,8 +168,8 @@ var Message_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MessageServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "To",
-			Handler:    _Message_To_Handler,
+			MethodName: "ChatTo",
+			Handler:    _Message_ChatTo_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

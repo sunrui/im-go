@@ -192,7 +192,7 @@ func (client *Client) Start() {
 
 // ChatTo 聊天
 func (client *Client) ChatTo(chatToRequest *message.ToRequest) (*message.ToReply, error) {
-	return client.messageClient.To(context.Background(), chatToRequest)
+	return client.messageClient.ChatTo(context.Background(), chatToRequest)
 }
 
 // Close 关闭

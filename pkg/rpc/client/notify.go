@@ -18,6 +18,7 @@ import (
 type Notifier interface {
 	OnAuthFailed(reason string) // 认证失败
 	OnError(err error)          // 错误
+	OnConnect()                 // 连接成功
 	OnDisconnect()              // 断开连接
 	onClose()                   // 关闭
 

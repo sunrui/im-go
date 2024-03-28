@@ -89,7 +89,7 @@ message SubscribeReply {
 // 聊天
 service Message {
   // 发送
-  rpc To(ToRequest) returns(ToReply);
+  rpc ChatTo(ToRequest) returns(ToReply);
   // 订阅
   rpc Subscribe(SubscribeRequest) returns(stream SubscribeReply);
 }

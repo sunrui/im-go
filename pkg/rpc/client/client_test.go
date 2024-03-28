@@ -28,6 +28,10 @@ func (n Notify) OnError(err error) {
 	println(fmt.Sprintf("OnError, err: %s", err.Error()))
 }
 
+func (n Notify) OnConnect() {
+	println("OnConnect")
+}
+
 func (n Notify) OnDisconnect() {
 	println("OnDisconnect")
 }
