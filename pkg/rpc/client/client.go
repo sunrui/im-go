@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"io"
 
-	auth2 "pkg/rpc/auth"
 	"pkg/rpc/interceptor"
 
 	"pkg/rpc/proto/bottle_chat"
@@ -36,7 +35,6 @@ type Client struct {
 	notifier Notifier         // 通知
 	conn     *grpc.ClientConn // 连接
 
-	authClient       auth2.AuthClient             // 认证客户端
 	messageClient    message.MessageClient        // 消息客户端
 	p2pChatClient    p2p_chat.P2PChatClient       // 点对点聊天客户端
 	groupChatClient  group_chat.GroupChatClient   // 群聊天客户端
@@ -53,7 +51,7 @@ func NewClient(config Config, notifier Notifier) *Client {
 }
 
 // Start 启动
-func (client Client) Start() {
+func (client *Client) Start() {
 	opts := []grpc.DialOption{
 		grpc.WithPerRPCCredentials(oauth.TokenSource{
 			TokenSource: oauth2.StaticTokenSource(
@@ -81,27 +79,6 @@ func (client Client) Start() {
 		ctx := context.Background()
 
 		go func() {
-			client.authClient = auth2.NewAuthClient(client.conn)
-			if authSubscribeClient, err := client.authClient.Subscribe(ctx, &auth2.SubscribeRequest{}); err != nil {
-				client.notifier.OnError(err)
-				return
-			} else {
-				for {
-					if reply, err := authSubscribeClient.Recv(); err != nil {
-						client.notifier.OnError(err)
-					} else {
-						if err == io.EOF {
-							client.notifier.onClose()
-							break
-						}
-
-						println(reply.ProtoMessage, reply.Message, reply.GetMessage())
-					}
-				}
-			}
-		}()
-
-		go func() {
 			client.messageClient = message.NewMessageClient(conn)
 			if messageSubscribeClient, err := client.messageClient.Subscribe(ctx, &message.SubscribeRequest{}); err != nil {
 				client.notifier.OnError(err)
@@ -110,6 +87,7 @@ func (client Client) Start() {
 				for {
 					if reply, err := messageSubscribeClient.Recv(); err != nil {
 						client.notifier.OnError(err)
+						break
 					} else {
 						if err == io.EOF {
 							client.notifier.onClose()
@@ -131,6 +109,7 @@ func (client Client) Start() {
 				for {
 					if reply, err := p2pChatSubscribeClient.Recv(); err != nil {
 						client.notifier.OnError(err)
+						break
 					} else {
 						if err == io.EOF {
 							client.notifier.onClose()
@@ -152,6 +131,7 @@ func (client Client) Start() {
 				for {
 					if reply, err := groupChatSubscribeClient.Recv(); err != nil {
 						client.notifier.OnError(err)
+						break
 					} else {
 						if err == io.EOF {
 							client.notifier.onClose()
@@ -173,6 +153,7 @@ func (client Client) Start() {
 				for {
 					if reply, err := roomChatSubscribeClient.Recv(); err != nil {
 						client.notifier.OnError(err)
+						break
 					} else {
 						if err == io.EOF {
 							client.notifier.onClose()
@@ -194,6 +175,7 @@ func (client Client) Start() {
 				for {
 					if reply, err := bottleChatSubscribeClient.Recv(); err != nil {
 						client.notifier.OnError(err)
+						break
 					} else {
 						if err == io.EOF {
 							client.notifier.onClose()
@@ -209,12 +191,12 @@ func (client Client) Start() {
 }
 
 // ChatTo 聊天
-func (client Client) ChatTo(chatToRequest *message.ToRequest) (*message.ToReply, error) {
+func (client *Client) ChatTo(chatToRequest *message.ToRequest) (*message.ToReply, error) {
 	return client.messageClient.To(context.Background(), chatToRequest)
 }
 
 // Close 关闭
-func (client Client) Close() {
+func (client *Client) Close() {
 	if err := client.conn.Close(); err != nil {
 		client.notifier.OnError(err)
 	}

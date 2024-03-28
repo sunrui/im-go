@@ -21,7 +21,6 @@ import (
 
 	"pkg/rpc/proto/message"
 
-	"pkg/rpc/auth"
 	"pkg/rpc/interceptor"
 
 	"google.golang.org/grpc"
@@ -65,8 +64,6 @@ func (server Server) Start() {
 	}
 
 	s := grpc.NewServer(opts...)
-
-	auth.RegisterAuthServer(s, &auth.ImplAuthServer{})
 
 	message.RegisterMessageServer(s, server.registrar.MessageServer)
 	p2p_chat.RegisterP2PChatServer(s, server.registrar.P2pChatServer)

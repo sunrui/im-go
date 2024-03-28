@@ -18,8 +18,6 @@ import (
 
 	"pkg/rpc/proto/p2p_chat"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"pkg/rpc/proto/message"
 )
 
@@ -44,13 +42,11 @@ func (MessageServer) To(context.Context, *message.ToRequest) (*message.ToReply, 
 		Status:     0,
 		Comment:    "comment",
 	}, nil
-
-	return nil, status.Errorf(codes.Unimplemented, "method To not implemented")
 }
 
 // Subscribe 订阅消息
 func (MessageServer) Subscribe(*message.SubscribeRequest, message.Message_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+	return nil
 }
 
 type P2PChatServer struct {
@@ -59,7 +55,7 @@ type P2PChatServer struct {
 
 // Subscribe 订阅消息
 func (P2PChatServer) Subscribe(*p2p_chat.SubscribeRequest, p2p_chat.P2PChat_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+	return nil
 }
 
 type GroupChatServer struct {
@@ -68,7 +64,7 @@ type GroupChatServer struct {
 
 // Subscribe 订阅消息
 func (GroupChatServer) Subscribe(*group_chat.SubscribeRequest, group_chat.GroupChat_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+	return nil
 }
 
 type RoomChatServer struct {
@@ -77,7 +73,7 @@ type RoomChatServer struct {
 
 // Subscribe 订阅消息
 func (RoomChatServer) Subscribe(*room_chat.SubscribeRequest, room_chat.RoomChat_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+	return nil
 }
 
 type BottleChatServer struct {
@@ -86,7 +82,7 @@ type BottleChatServer struct {
 
 // Subscribe 订阅消息
 func (BottleChatServer) Subscribe(*bottle_chat.SubscribeRequest, bottle_chat.BottleChat_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+	return nil
 }
 
 func TestServer(t *testing.T) {

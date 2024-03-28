@@ -67,12 +67,15 @@ func TestClient_Start(t *testing.T) {
 
 	client.Start()
 
-	// reply, err := client.ChatTo(&message.ToRequest{
-	// 	Source: &message.Source{
-	// 		SequenceId: "1",
-	// 	},
-	// })
-	//
-	// println(reply, err)
-	time.Sleep(time.Hour)
+	time.Sleep(time.Second)
+
+	for {
+		if reply, err := client.ChatTo(&message.ToRequest{}); err != nil {
+			println(err.Error())
+		} else {
+			println("reply", reply.SequenceId, reply.Status, reply.Comment)
+		}
+
+		time.Sleep(5 * time.Second)
+	}
 }
