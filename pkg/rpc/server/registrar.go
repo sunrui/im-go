@@ -8,15 +8,15 @@ package server
 
 import (
 	"pkg/rpc/proto/bottle_chat"
+	"pkg/rpc/proto/chat"
 	"pkg/rpc/proto/group_chat"
-	"pkg/rpc/proto/message"
 	"pkg/rpc/proto/p2p_chat"
 	"pkg/rpc/proto/room_chat"
 )
 
 // Registrar 注册
 type Registrar struct {
-	MessageServer    message.MessageServer        // 消息服务
+	ChatServer       chat.ChatServer              // 聊天服务
 	P2pChatServer    p2p_chat.P2PChatServer       // 点对点聊天服务
 	GroupChatServer  group_chat.GroupChatServer   // 群聊天服务
 	RoomChatServer   room_chat.RoomChatServer     // 聊天室服务

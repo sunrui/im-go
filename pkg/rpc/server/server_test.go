@@ -18,7 +18,7 @@ import (
 
 	"pkg/rpc/proto/p2p_chat"
 
-	"pkg/rpc/proto/message"
+	"pkg/rpc/proto/chat"
 )
 
 type Notify struct{}
@@ -31,13 +31,13 @@ func (n Notify) onClose() {
 	println("onClose")
 }
 
-type MessageServer struct {
-	message.UnimplementedMessageServer
+type ChatServer struct {
+	chat.UnimplementedChatServer
 }
 
 // ChatTo 发送消息
-func (MessageServer) ChatTo(context.Context, *message.ToRequest) (*message.ToReply, error) {
-	return &message.ToReply{
+func (ChatServer) ChatTo(context.Context, *chat.ToRequest) (*chat.ToReply, error) {
+	return &chat.ToReply{
 		SequenceId: "test_sequence_id",
 		Status:     0,
 		Comment:    "comment",
@@ -45,7 +45,7 @@ func (MessageServer) ChatTo(context.Context, *message.ToRequest) (*message.ToRep
 }
 
 // Subscribe 订阅消息
-func (MessageServer) Subscribe(*message.SubscribeRequest, message.Message_SubscribeServer) error {
+func (ChatServer) Subscribe(*chat.SubscribeRequest, chat.Chat_SubscribeServer) error {
 	return nil
 }
 
@@ -93,7 +93,7 @@ func TestServer(t *testing.T) {
 	}
 
 	server := NewServer(config, Notify{}, Registrar{
-		MessageServer:    MessageServer{},
+		ChatServer:       ChatServer{},
 		P2pChatServer:    P2PChatServer{},
 		GroupChatServer:  GroupChatServer{},
 		RoomChatServer:   RoomChatServer{},

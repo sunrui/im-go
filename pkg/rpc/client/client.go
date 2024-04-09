@@ -21,7 +21,7 @@ import (
 
 	"pkg/rpc/proto/p2p_chat"
 
-	"pkg/rpc/proto/message"
+	"pkg/rpc/proto/chat"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
@@ -35,7 +35,7 @@ type Client struct {
 	notifier Notifier         // 通知
 	conn     *grpc.ClientConn // 连接
 
-	messageClient    message.MessageClient        // 消息客户端
+	chatClient       chat.ChatClient              // 聊天客户端
 	p2pChatClient    p2p_chat.P2PChatClient       // 点对点聊天客户端
 	groupChatClient  group_chat.GroupChatClient   // 群聊天客户端
 	roomChatClient   room_chat.RoomChatClient     // 聊天室客户端
@@ -78,9 +78,10 @@ func (client *Client) Start() {
 		client.conn = conn
 		ctx := context.Background()
 
+		// 消息推送
 		go func() {
-			client.messageClient = message.NewMessageClient(conn)
-			if messageSubscribeClient, err := client.messageClient.Subscribe(ctx, &message.SubscribeRequest{}); err != nil {
+			client.chatClient = chat.NewChatClient(conn)
+			if messageSubscribeClient, err := client.chatClient.Subscribe(ctx, &chat.SubscribeRequest{}); err != nil {
 				client.notifier.OnError(err)
 				return
 			} else {
@@ -100,6 +101,7 @@ func (client *Client) Start() {
 			}
 		}()
 
+		// 点对点聊天
 		go func() {
 			client.p2pChatClient = p2p_chat.NewP2PChatClient(conn)
 			if p2pChatSubscribeClient, err := client.p2pChatClient.Subscribe(ctx, &p2p_chat.SubscribeRequest{}); err != nil {
@@ -122,6 +124,7 @@ func (client *Client) Start() {
 			}
 		}()
 
+		// 群聊天
 		go func() {
 			client.groupChatClient = group_chat.NewGroupChatClient(conn)
 			if groupChatSubscribeClient, err := client.groupChatClient.Subscribe(ctx, &group_chat.SubscribeRequest{}); err != nil {
@@ -144,6 +147,7 @@ func (client *Client) Start() {
 			}
 		}()
 
+		// 聊天室聊天
 		go func() {
 			client.roomChatClient = room_chat.NewRoomChatClient(conn)
 			if roomChatSubscribeClient, err := client.roomChatClient.Subscribe(ctx, &room_chat.SubscribeRequest{}); err != nil {
@@ -166,6 +170,7 @@ func (client *Client) Start() {
 			}
 		}()
 
+		// 漂流瓶聊天
 		go func() {
 			client.bottleChatClient = bottle_chat.NewBottleChatClient(conn)
 			if bottleChatSubscribeClient, err := client.bottleChatClient.Subscribe(ctx, &bottle_chat.SubscribeRequest{}); err != nil {
@@ -191,8 +196,8 @@ func (client *Client) Start() {
 }
 
 // ChatTo 聊天
-func (client *Client) ChatTo(chatToRequest *message.ToRequest) (*message.ToReply, error) {
-	return client.messageClient.ChatTo(context.Background(), chatToRequest)
+func (client *Client) ChatTo(chatToRequest *chat.ToRequest) (*chat.ToReply, error) {
+	return client.chatClient.To(context.Background(), chatToRequest)
 }
 
 // Close 关闭

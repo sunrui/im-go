@@ -19,7 +19,7 @@ import (
 
 	"pkg/rpc/proto/p2p_chat"
 
-	"pkg/rpc/proto/message"
+	"pkg/rpc/proto/chat"
 
 	"pkg/rpc/interceptor"
 
@@ -65,7 +65,7 @@ func (server Server) Start() {
 
 	s := grpc.NewServer(opts...)
 
-	message.RegisterMessageServer(s, server.registrar.MessageServer)
+	chat.RegisterChatServer(s, server.registrar.ChatServer)
 	p2p_chat.RegisterP2PChatServer(s, server.registrar.P2pChatServer)
 	group_chat.RegisterGroupChatServer(s, server.registrar.GroupChatServer)
 	room_chat.RegisterRoomChatServer(s, server.registrar.RoomChatServer)

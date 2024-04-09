@@ -7,9 +7,10 @@
 package bottle_chat
 
 import (
+	"pkg/rpc/proto/bottle_chat"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"pkg/rpc/proto/bottle_chat"
 )
 
 // Server 消息服务

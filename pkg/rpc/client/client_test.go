@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"pkg/rpc/proto/bottle_chat"
+	"pkg/rpc/proto/chat"
 	"pkg/rpc/proto/group_chat"
-	"pkg/rpc/proto/message"
 	"pkg/rpc/proto/p2p_chat"
 	"pkg/rpc/proto/room_chat"
 )
@@ -40,7 +40,7 @@ func (n Notify) onClose() {
 	println("OnClose")
 }
 
-func (n Notify) OnMessage(reply *message.SubscribeReply) {
+func (n Notify) OnMessage(reply *chat.SubscribeReply) {
 	println(fmt.Sprintf("OnMessage, reply: %s", reply.Chat.String()))
 }
 
@@ -74,7 +74,7 @@ func TestClient_Start(t *testing.T) {
 	time.Sleep(time.Second)
 
 	for {
-		if reply, err := client.ChatTo(&message.ToRequest{}); err != nil {
+		if reply, err := client.ChatTo(&chat.ToRequest{}); err != nil {
 			println(err.Error())
 		} else {
 			println("reply", reply.SequenceId, reply.Status, reply.Comment)

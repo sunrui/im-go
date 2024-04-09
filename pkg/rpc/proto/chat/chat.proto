@@ -1,0 +1,95 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-07 23:31:57
+ */
+
+syntax = "proto3";
+
+import "pkg/rpc/proto/chat/chat_text.proto";
+import "pkg/rpc/proto/chat/chat_sticker.proto";
+import "pkg/rpc/proto/chat/chat_quoted.proto";
+import "pkg/rpc/proto/chat/chat_image.proto";
+import "pkg/rpc/proto/chat/chat_audio.proto";
+import "pkg/rpc/proto/chat/chat_video.proto";
+import "pkg/rpc/proto/chat/chat_file.proto";
+import "pkg/rpc/proto/chat/chat_location.proto";
+import "pkg/rpc/proto/chat/chat_card.proto";
+import "pkg/rpc/proto/chat/chat_withdraw.proto";
+import "pkg/rpc/proto/chat/chat_voice.proto";
+import "pkg/rpc/proto/chat/chat_voice_call.proto";
+import "pkg/rpc/proto/chat/chat_video_call.proto";
+
+package pkg.rpc.proto.chat;
+option go_package = "pkg/rpc/proto/chat";
+
+// 来源
+message Source {
+  string sequenceId = 1; // 序号
+
+  oneof Id {
+    string userId = 10; // 用户 id
+    string groupId = 11; // 群组 id
+    string roomId = 12; // 房间 id
+    string bottleId = 13; // 漂流瓶 id
+  }
+
+  int64 timestamp = 4; // 时间戳
+}
+
+// 聊天内容
+message Content {
+  oneof Type {
+    ChatText text = 10; // 文字
+    ChatSticker sticker = 11; // 表情包
+    ChatQuoted quoted = 12; // 引用
+    ChatImage image = 13; // 图片
+    ChatAudio audio = 14; // 音频
+    ChatVideo video = 15; // 视频
+    ChatFile file = 16; // 文件
+    ChatLocation location = 17; // 定位
+    ChatCard card = 18; // 卡片
+    ChatWithdraw withdraw = 19; // 撤回
+    ChatVoice voice = 20; // 语音信息
+    ChatVoiceCall voiceCall = 21; // 语音通话
+    ChatVideoCall videoCall = 22; // 视频通话
+  }
+}
+
+// 发送请求
+message ToRequest {
+  Source source = 1; // 来源
+  Content chat = 2; // 内容
+}
+
+// 发送回复
+message ToReply {
+  string sequenceId = 1; // 序号
+
+  // 状态
+  enum Status {
+    SENT = 0; // 已发送
+    REJECT = 22; // 拒收
+  }
+
+  Status status = 3; // 状态
+  string comment = 4; // 备注
+}
+
+// 订阅请求
+message SubscribeRequest {
+}
+
+// 订阅回复
+message SubscribeReply {
+  Source source = 1; // 来源
+  Content chat = 2; // 内容
+}
+
+// 聊天
+service Chat {
+  // 发送
+  rpc To(ToRequest) returns(ToReply);
+  // 订阅
+  rpc Subscribe(SubscribeRequest) returns(stream SubscribeReply);
+}

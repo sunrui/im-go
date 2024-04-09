@@ -1,0 +1,61 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 10:57:20
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.proto.chat;
+option go_package = "pkg/rpc/proto/chat";
+
+// 视频通话
+message ChatVideoCall {
+  // 定义一个名为VideoCallStatus的枚举类型，用于描述视频通话的不同状态。
+  enum Status {
+    // 发出了视频通话请求，等待对方响应。
+    PENDING_REQUEST = 0;
+
+    // 视频通话正在进行中，音频和视频流均正常传输。
+    ACTIVE = 1;
+
+    // 对方拒绝了视频通话请求。
+    REJECTED = 2;
+
+    // 视频通话请求在等待对方响应时超时。
+    TIMEOUT = 3;
+
+    // 视频通话被系统规则或对方设置禁止。
+    FORBIDDEN = 4;
+
+    // 主叫方在对方接受之前主动取消了视频通话。
+    CANCELLED_BY_CALLER = 5;
+
+    // 被叫方在通话过程中主动结束视频通话。
+    ENDED_BY_CALLEE = 6;
+
+    // 视频通话因网络问题、设备故障或其他技术原因意外中断。
+    TECHNICAL_ISSUE = 7;
+
+    // 视频通话因违反服务条款、账户限制等原因被系统强制结束。
+    TERMINATED_BY_SYSTEM = 8;
+
+    // 视频通话已进入保留状态，音频和/或视频暂时暂停。
+    ON_HOLD = 9;
+
+    // 通话中的一方或双方已启用音频静音。
+    AUDIO_MUTED = 10;
+
+    // 通话中的一方或双方已关闭视频流。
+    VIDEO_DISABLED = 11;
+
+    // 视频通话正在进行转移操作，即将连接到另一个用户或设备。
+    TRANSFER_IN_PROGRESS = 12;
+  }
+
+  string callee_id = 1; // 对方的唯一标识，如用户ID或电话号码
+  int64 start_time_unix_timestamp = 2; // 通话开始时间戳（Unix时间戳）
+  int32 duration_seconds = 3; // 通话持续时长（秒）
+  string protocol = 4; // 通话使用的协议类型（例如：SIP、WebRTC等）
+  string session_url_or_token = 5; // （可选）如果是VoIP服务，可能是用于建立通话会话的服务器URL或令牌
+}

@@ -1,0 +1,15 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 10:50:28
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.proto.chat;
+option go_package = "pkg/rpc/proto/chat";
+
+// 撤回
+message ChatWithdraw {
+  string sequenceId = 1; // 序号
+}

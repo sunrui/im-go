@@ -1,0 +1,15 @@
+/*
+ * Copyright © 2024 honeysense.com All rights reserved.
+ * Author: sunrui
+ * Date: 2024-03-26 10:36:26
+ */
+
+syntax = "proto3";
+
+package pkg.rpc.proto.chat;
+option go_package = "pkg/rpc/proto/chat";
+
+// 文件
+message ChatFile {
+  string url = 1; // 地址
+}

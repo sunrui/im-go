@@ -8,7 +8,7 @@ package message
 
 import (
 	"context"
-	"pkg/rpc/proto/message"
+	"pkg/rpc/proto/chat"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,15 +16,15 @@ import (
 
 // Server 消息服务
 type Server struct {
-	message.UnimplementedMessageServer
+	chat.UnimplementedMessageServer
 }
 
 // ChatTo 发送消息
-func (Server) ChatTo(context.Context, *message.ToRequest) (*message.ToReply, error) {
+func (Server) ChatTo(context.Context, *chat.ToRequest) (*chat.ToReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChatTo not implemented")
 }
 
 // Subscribe 订阅消息
-func (Server) Subscribe(*message.SubscribeRequest, message.Message_SubscribeServer) error {
+func (Server) Subscribe(*chat.SubscribeRequest, chat.Message_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }

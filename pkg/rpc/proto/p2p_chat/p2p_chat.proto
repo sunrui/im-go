@@ -10,10 +10,10 @@ import "pkg/rpc/proto/p2p_chat/online.proto";
 import "pkg/rpc/proto/p2p_chat/offline.proto";
 import "pkg/rpc/proto/p2p_chat/inputting.proto";
 import "pkg/rpc/proto/p2p_chat/input_stop.proto";
-import "pkg/rpc/proto/p2p_chat/message_delivered.proto";
-import "pkg/rpc/proto/p2p_chat/message_read.proto";
-import "pkg/rpc/proto/p2p_chat/message_reject.proto";
-import "pkg/rpc/proto/p2p_chat/message_withdraw.proto";
+import "pkg/rpc/proto/p2p_chat/chat_delivered.proto";
+import "pkg/rpc/proto/p2p_chat/chat_read.proto";
+import "pkg/rpc/proto/p2p_chat/chat_reject.proto";
+import "pkg/rpc/proto/p2p_chat/chat_withdraw.proto";
 import "pkg/rpc/proto/p2p_chat/friend_request.proto";
 import "pkg/rpc/proto/p2p_chat/friend_reply.proto";
 
@@ -35,10 +35,10 @@ message SubscribeReply {
     Inputting inputting = 4; // 输入中
     InputStop inputStop = 5; // 输入停止
 
-    MessageDelivered messageDelivered = 6; // 消息已送达
-    MessageRead messageRead = 7; // 消息已读
-    MessageReject messageReject = 8; // 消息拒绝
-    MessageWithdraw messageWithdraw = 9; // 消息撤回
+    ChatDelivered chatDelivered = 6; // 消息已送达
+    ChatRead chatRead = 7; // 消息已读
+    ChatReject chatReject = 8; // 消息拒绝
+    ChatWithdraw chatWithdraw = 9; // 消息撤回
 
     FriendRequest friendRequest = 2; // 好友请求
     FriendReply friendReply = 3; // 好友回复
